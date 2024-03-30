@@ -1,9 +1,26 @@
 # DotFiles
 
-## Populate environment
+All .DotFiles you want to keep track of, should be stored in the `src/` folder.
 
-<!-- TODO: update files from the actual configurations -->
-<!-- TODO: reuse from a specific list the things to update from and to config -->
+## Initiating .DotFiles in your system from source
 
-1. If `start.sh` can't be run, give it permissions: `chmod +x start.sh`
-2. Run `./start.sh`
+This is non-reversible, so you will be prompted for each .DotFile.
+
+`make init`
+
+## Updating .DotFiles from your system
+
+You should not update the files in `src/` directly.
+Rather update the files directly in your system (`~`) and when you're happy, run:
+
+`make update`
+
+## Adding a new .DotFile
+
+Just copy it from your system to the `src/` folder and commit.
+
+`cp ~/.newFile src`
+
+## Troubleshooting
+
+1. If you run into "Permission denied" errors when running scripts, run `make chmod`
