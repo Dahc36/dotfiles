@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cp .tmux.conf ~/
-cp .vimrc ~/
+cp src/.tmux.conf ~/
+cp src/.vimrc ~/
