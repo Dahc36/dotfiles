@@ -1,11 +1,14 @@
-SCRIPTS_DIR=scripts
+SCRIPTS_DIR=./scripts
 
-init:
-	$(SCRIPTS_DIR)/init.bash
+pull:
+	$(SCRIPTS_DIR)/pull.bash
+push:
+	$(SCRIPTS_DIR)/push.bash
 
-update:
-	$(SCRIPTS_DIR)/update.bash
+add:
+	$(SCRIPTS_DIR)/add.bash
 
 chmod:
-	chmod +x $(SCRIPTS_DIR)/init.bash
-	chmod +x $(SCRIPTS_DIR)/update.bash
+	chmod +x $(SCRIPTS_DIR)/push.bash
+	chmod +x $(SCRIPTS_DIR)/pull.bash
+	chmod +x $(SCRIPTS_DIR)/add.bash
