@@ -5,6 +5,7 @@ set -euo pipefail
 test_suites=(
   "link"
   "add"
+  "restore"
 )
 
 for test_suite in "${test_suites[@]}"; do
