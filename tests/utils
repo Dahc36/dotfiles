@@ -1,0 +1,25 @@
+setup_temp_dir() {
+  local tmp=$(mktemp -d $"$PWD/test.$(date +%Y_%m_%d-%H_%M_%S).XXXX")
+  cd "$tmp"
+  mkdir home
+  mkdir src
+  echo "$tmp"
+}
+
+cleanup() {
+  tmp_dir="$1"
+  trap 'rm -rf "$tmp_dir"' EXIT
+}
+
+test_case() {
+  local desc="$1"
+  shift
+
+  printf '    • %s ' "$desc"
+
+  if "$@"; then
+    echo ✔
+  else
+    echo ❌
+  fi
+}
