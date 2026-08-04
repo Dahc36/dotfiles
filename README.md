@@ -1,4 +1,4 @@
-# DotFiles
+# dotfiles
 
 All .dotfiles you want to keep track of.
 Each one should be defined in the `src/` folder, mirroring their path within `$HOME`.
@@ -12,7 +12,7 @@ Each one should be defined in the `src/` folder, mirroring their path within `$H
 
 ## Commands
 
-- `pull` syncs `src/` with your local files
-- `push` syncs your local files with src
-- `add` copies a local file into src
+- `link` syncs `src/` with your local files, by adding symlinks to your `$HOME`
+- `add` moves a `$HOME` file into `src/`, leaving behind a symlink pointing to the moved file
 - `chmod` makes all scripts executable
+- `test` runs a test suite against the existing scripts

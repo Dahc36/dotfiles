@@ -8,20 +8,28 @@ shopt -s nullglob
 shopt -s dotglob
 
 src_abs_path="$PWD/src"
-backup_path="$PWD/backup/$(date +%Y_%m_%d-%H_%M_%S)"
+timestamp=${TIMESTAMP:-$(date +%Y_%m_%d-%H_%M_%S)}
+backup_path="$PWD/backup/$timestamp"
 
 
-link_file() {
+link_dest() {
   local src="$1"
   local dest="$2"
   echo "Linking: $dest -> $src"
   ln -s "$src" "$dest"
 }
 
-sync_file() {
+backup_dest() {
+  local dest="$1"
+  local backup_full_path="$backup_path${dest#"$HOME"}"
+  echo "Backing up $dest"
+  mkdir -p "${backup_full_path%/*}"
+  mv "$dest" "$backup_full_path"
+}
+
+sync_src() {
   local src="$1"
   local dest="$HOME${src#"$src_abs_path"}"
-  local backup_full_path="$backup_path${src#"$src_abs_path"}"
 
   if [[ -L "$dest" && "$(readlink "$dest")" == "$src" ]]; then
     echo "Already linked: $dest"
@@ -29,29 +37,27 @@ sync_file() {
   fi
 
   if [[ -L "$dest" ]]; then
-    echo "Removing link: $dest -> $(readlink "$dest")"
-    rm "$dest"
-    link_file "$src" "$dest"
+    echo "Found unexpected symlink: $dest -> $(readlink "$dest")"
+    backup_dest "$dest"
+    link_dest "$src" "$dest"
     return
   fi
 
   if [[ ! -e "$dest" ]]; then
     mkdir -p "${dest%/*}"
-    link_file "$src" "$dest"
+    link_dest "$src" "$dest"
     return
   fi
 
   if cmp -s "$src" "$dest"; then
-    echo "Removing: $dest"
+    echo "Same contents, removing $dest"
     rm "$dest"
-    link_file "$src" "$dest"
+    link_dest "$src" "$dest"
     return
   fi
 
-  echo "Backing up: $dest"
-  mkdir -p "${backup_full_path%/*}"
-  mv "$dest" "$backup_full_path"
-  link_file "$src" "$dest"
+  backup_dest "$dest"
+  link_dest "$src" "$dest"
 }
 
 walk_src() {
@@ -62,7 +68,7 @@ walk_src() {
     elif [[ -d "$file" ]]; then
       walk_src "$file"
     elif [[ -f "$file" ]]; then
-      sync_file "$file"
+      sync_src "$file"
     fi
   done
 }
