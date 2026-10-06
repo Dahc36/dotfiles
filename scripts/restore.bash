@@ -4,6 +4,11 @@ set -euo pipefail
 
 shopt -s nullglob dotglob
 
+if [[ ! -d "$PWD/backup" ]]; then
+  echo "No backup/ in $PWD, run from the repo root" >&2
+  exit 1
+fi
+
 select_backup() {
   local backup="$(printf '%s\n' backup/*/ | fzf)"
   backup=${backup%/}

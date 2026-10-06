@@ -12,7 +12,9 @@ Each one should be defined in the `src/` folder, mirroring their path within `$H
 
 ## Commands
 
-- `link` syncs `src/` with your local files, by adding symlinks to your `$HOME`
-- `add` moves a `$HOME` file into `src/`, leaving behind a symlink pointing to the moved file
-- `chmod` makes all scripts executable
-- `test` runs a test suite against the existing scripts
+Run them from the repo root; the scripts refuse to run from anywhere else.
+
+- `make link` syncs `src/` with your local files, by adding symlinks to your `$HOME`
+- `make add` moves a `$HOME` file into `src/`, leaving behind a symlink pointing to the moved file
+- `make restore` puts a backup's files back into `$HOME`, choosing one with `fzf`
+- `make test` runs a test suite against the existing scripts
