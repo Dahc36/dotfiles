@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [[ ! -d "$PWD/src" ]]; then
+  echo "No src/ in $PWD, run from the repo root" >&2
+  exit 1
+fi
+
 read -r -p "File: ~/" prompt
 src="$PWD/src/$prompt"
 dest="$HOME/$prompt"

@@ -8,6 +8,12 @@ shopt -s nullglob
 shopt -s dotglob
 
 src_abs_path="$PWD/src"
+
+if [[ ! -d "$src_abs_path" ]]; then
+  echo "No src/ in $PWD, run from the repo root" >&2
+  exit 1
+fi
+
 timestamp=${TIMESTAMP:-$(date +%Y_%m_%d-%H_%M_%S)}
 backup_path="$PWD/backup/$timestamp"
 

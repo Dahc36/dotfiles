@@ -1,13 +1,13 @@
 SCRIPTS_DIR=./scripts
 TESTS_DIR=./tests
 
+.PHONY: add link restore test
+
 add:
-	$(SCRIPTS_DIR)/add.bash
+	bash $(SCRIPTS_DIR)/add.bash
 link:
-	$(SCRIPTS_DIR)/link.bash
+	bash $(SCRIPTS_DIR)/link.bash
+restore:
+	bash $(SCRIPTS_DIR)/restore.bash
 test:
 	bash $(TESTS_DIR)/run.bash
-
-chmod:
-	chmod +x $(SCRIPTS_DIR)/*
-	chmod +x $(TESTS_DIR)/run
