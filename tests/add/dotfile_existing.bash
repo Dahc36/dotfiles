@@ -1,19 +1,19 @@
-source tests/utils
+source tests/utils.bash
 
-tmp_dir=$(setup_temp_dir)
-cleanup "$tmp_dir"
-cd "$tmp_dir"
+test_body() {
+  local tmp_dir="$1"
 
-touch src/.example
-echo "value" > src/.example
-touch home/.example
-echo "value" > home/.example
+  echo "value" > src/.example
+  echo "value" > home/.example
 
-echo ".example" | \
-HOME="$tmp_dir/home" \
-../scripts/add.bash > /dev/null
+  echo ".example" | \
+  HOME="$tmp_dir/home" \
+  bash ../scripts/add.bash > /dev/null
 
-test_case "File in src remains" test -e src/.example
-test_case "Doesn't create symlink in home" test ! -L home/.example
-test_case "File in home remains" test -e home/.example
-test_case "File keeps same contents" test "$(cat home/.example)" = "$(cat src/.example)"
+  test_case "File in src remains" test -e src/.example
+  test_case "Doesn't create symlink in home" test ! -L home/.example
+  test_case "File in home remains" test -e home/.example
+  test_case "File keeps same contents" test "$(cat home/.example)" = "$(cat src/.example)"
+}
+
+in_temp_dir test_body
