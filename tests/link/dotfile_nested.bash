@@ -1,17 +1,18 @@
-source tests/utils
+source tests/utils.bash
 
-tmp_dir=$(setup_temp_dir)
-cleanup "$tmp_dir"
+test_body() {
+  local tmp_dir="$1"
 
-cd "$tmp_dir"
-nested_folder=".folder/subfolder"
-mkdir -p "src/$nested_folder"
-touch "src/$nested_folder/example"
-echo "nested" > "src/$nested_folder/example"
+  local nested_folder=".folder/subfolder"
+  mkdir -p "src/$nested_folder"
+  echo "nested" > "src/$nested_folder/example"
 
-HOME="$tmp_dir/home" \
-../scripts/link.bash > /dev/null
+  HOME="$tmp_dir/home" \
+  bash ../scripts/link.bash > /dev/null
 
-home_link="home/$nested_folder/example"
-test_case "Creates home file" test -L "$home_link"
-test_case "Home file links to src " test "$(readlink "$home_link")" == "$tmp_dir/src/$nested_folder/example"
+  local home_link="home/$nested_folder/example"
+  test_case "Creates home file" test -L "$home_link"
+  test_case "Home file links to src" test "$(readlink "$home_link")" = "$tmp_dir/src/$nested_folder/example"
+}
+
+in_temp_dir test_body

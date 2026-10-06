@@ -6,7 +6,7 @@ add:
 link:
 	$(SCRIPTS_DIR)/link.bash
 test:
-	$(TESTS_DIR)/run
+	bash $(TESTS_DIR)/run.bash
 
 chmod:
 	chmod +x $(SCRIPTS_DIR)/*
