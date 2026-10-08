@@ -15,6 +15,11 @@ if [[ ! -d "$src_abs_path" ]]; then
   exit 1
 fi
 
+dry_run=false
+if [[ "${1:-}" == "--dry-run" ]]; then
+  dry_run=true
+fi
+
 timestamp=${TIMESTAMP:-$(date +%Y_%m_%d-%H_%M_%S)}
 backup_path="$PWD/backup/$timestamp"
 
@@ -28,6 +33,9 @@ report() {
 link_dest() {
   local src="$1"
   local dest="$2"
+  if [[ "$dry_run" == true ]]; then
+    return
+  fi
   mkdir -p "${dest%/*}"
   ln -s "$src" "$dest"
 }
@@ -35,8 +43,19 @@ link_dest() {
 backup_dest() {
   local dest="$1"
   local backup_full_path="$backup_path${dest#"$HOME"}"
+  if [[ "$dry_run" == true ]]; then
+    return
+  fi
   mkdir -p "${backup_full_path%/*}"
   mv "$dest" "$backup_full_path"
+}
+
+remove_dest() {
+  local dest="$1"
+  if [[ "$dry_run" == true ]]; then
+    return
+  fi
+  rm "$dest"
 }
 
 sync_src() {
@@ -73,7 +92,7 @@ sync_src() {
   fi
 
   if cmp -s "$src" "$dest"; then
-    rm "$dest"
+    remove_dest "$dest"
     link_dest "$src" "$dest"
     report replaced "$home_path"
     return
