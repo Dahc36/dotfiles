@@ -6,10 +6,10 @@ we're going to do.
 ## Facts
 
 Verified by reading the scripts, Makefile, README, `tests/run.bash`, `tests/utils.bash` and
-all 16 test files.
+all 17 test files.
 
 - **Repo shape.** 3 scripts (`link`, `add`, `restore`), a 5-target Makefile, 4 tracked
-  dotfiles in `src/`, 16 tests across 3 suites. Single user, macOS.
+  dotfiles in `src/`, 17 tests across 3 suites. Single user, macOS.
 - **bash is 3.2.57**, both `/bin/bash` and on PATH. No namerefs (`local -n`, 4.3+), no
   `declare -g` (4.2+).
 
@@ -30,20 +30,7 @@ backed up — no counter needed, and nothing prints on a run that backed nothing
 the per-file "Backing up …" lines never name the timestamped directory, so recovering
 means going and looking for it.
 
-### D2 — `add` is idempotent for an already-tracked file
-
-Today the `-e "$src"` check fires first and reports `File …/src/.zshrc already exists` with
-exit 1 — an error for a situation where nothing is wrong. `src/` already holding the file
-covers two different situations, and they get different answers:
-
-- **`src/<file>` exists and `~/<file>` is a symlink to it** — already tracked. Report it,
-  exit 0. `add` becomes idempotent, like `link`.
-- **`src/<file>` exists and `~/<file>` is a regular file or absent** — a real conflict: two
-  versions and no way to know which is wanted. Exit 1, naming `make link` as what
-  reconciles them, since that's the command that backs up the `$HOME` copy and links the
-  tracked one.
-
-### D3 — `restore` keeps `fzf`, checks for it, and refuses an empty selection
+### D2 — `restore` keeps `fzf`, checks for it, and refuses an empty selection
 
 `fzf` stays: filtering beats scanning once backups accumulate, and bash's `select` lays its
 menu out in columns, which is unreadable for a list of timestamps. It becomes a documented
@@ -70,7 +57,7 @@ local backup
 backup=$(printf '%s\n' "$PWD"/backup/*/ | fzf) || return 1
 ```
 
-### D4 — `restore_file` stops aborting the run partway
+### D3 — `restore_file` stops aborting the run partway
 
 Two guards, both against the same failure mode: `restore` giving up mid-recovery under
 `set -e` and leaving a half-restored home directory with no record of what got through.
@@ -81,7 +68,7 @@ Two guards, both against the same failure mode: `restore` giving up mid-recovery
 - **`mkdir -p` the destination's parent before `cp`.** A backup of a nested path is
   otherwise unrestorable once the intermediate directories are gone.
 
-### D5 — `restore` puts files back and nothing else; the README says what that means
+### D4 — `restore` puts files back and nothing else; the README says what that means
 
 `restore` replaces the symlink with the backed-up file and leaves `src/` untouched, so the
 next `make link` sees a differing regular file, backs it up and re-links — undoing the
@@ -92,7 +79,7 @@ re-applied on the next `link` unless the file is removed from `src/` by hand.
 visible rather than waiting to surprise. Untracking stays manual; a command for it can come
 later if it turns out to be a routine step.
 
-### D6 — `restore` reports what it restored
+### D5 — `restore` reports what it restored
 
 `restore_file` runs silently today, so `make restore` returns to a prompt with no record of
 what it touched. It prints one line per file in the shape of `link`'s `report` —
@@ -103,7 +90,7 @@ restored  ~/.zshrc
 restored  ~/.config/nvim/init.lua
 ```
 
-### D7 — README covers the decision table and the two gotchas
+### D6 — README covers the decision table and the two gotchas
 
 Three sections:
 
@@ -112,26 +99,21 @@ Three sections:
   for the file. This is what the Commands section doesn't answer, and it's what you want to read
   before pointing this at a home directory: what happens when a real file is already at
   the target.
-- **`fzf` is required** for `restore` (D3).
+- **`fzf` is required** for `restore` (D2).
 - **Restore doesn't stick** — the next `link` re-applies the repo's version unless the file
-  is removed from `src/`, and `make check` shows it pending (D5).
+  is removed from `src/`, and `make check` shows it pending (D4).
 
-### D8 — Test coverage
+### D7 — Test coverage
 
-Six new scenarios, in the shape of the existing sixteen: one file per scenario, a
+Four new scenarios, in the shape of the existing seventeen: one file per scenario, a
 `test_body` taking `tmp_dir` as `$1`, ending with `in_temp_dir test_body`.
-
-**add**
-
-1. Already tracked — exit 0, nothing changes (D2)
-2. `src/` has it but `$HOME` has a regular file — exit 1 (D2)
 
 **restore**
 
-3. Empty selection — exits without touching anything (D3)
-4. No backups at all — exits with a message (D3)
-5. Destination missing — restores it anyway (D4)
-6. Nested path with missing parents — restores it anyway (D4)
+1. Empty selection — exits without touching anything (D2)
+2. No backups at all — exits with a message (D2)
+3. Destination missing — restores it anyway (D3)
+4. Nested path with missing parents — restores it anyway (D3)
 
-3 is the safety one: the root-filesystem walk. No test for D1's backup-path message — asserting on output
+1 is the safety one: the root-filesystem walk. No test for D1's backup-path message — asserting on output
 text is brittle for little return.
