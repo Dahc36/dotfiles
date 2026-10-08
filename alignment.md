@@ -8,8 +8,8 @@ we're going to do.
 Verified by reading the scripts, Makefile, README, `tests/run.bash`, `tests/utils.bash` and
 all 10 test files.
 
-- **Repo shape.** 3 scripts (`link`, `add`, `restore`), a 4-target Makefile, 4 tracked
-  dotfiles in `src/`, 13 tests across 3 suites. Single user, macOS.
+- **Repo shape.** 3 scripts (`link`, `add`, `restore`), a 5-target Makefile, 4 tracked
+  dotfiles in `src/`, 14 tests across 3 suites. Single user, macOS.
 - **bash is 3.2.57**, both `/bin/bash` and on PATH. No namerefs (`local -n`, 4.3+), no
   `declare -g` (4.2+).
 - **`add` on a directory, then `link`, destroys the file — verified.** `add` doesn't check
@@ -22,31 +22,7 @@ all 10 test files.
 
 ## Decisions
 
-### D1 — `link` exits 0; a `--dry-run` mode backs a `check` command
-
-`link` exits 0 when it completes, including when it reported `skipped` or `ignored`. Those
-are deliberate outcomes, and a non-zero exit would need `sync_src` to return a status and
-`walk_src` to carry it up through the recursion — machinery with nothing consuming it,
-since nothing here is automated.
-
-`link.bash` takes `--dry-run`: it walks `src/` and prints the same `report` outcome it would
-print for real, for every file, without running any `mkdir`, `ln`, `mv` or `rm`. The
-mutations all live in `link_dest`, `backup_dest` and the one `rm` in the `replaced` branch,
-so those are what the flag suppresses. It exits 0 too: it's a display, and nothing consumes
-an exit code from it. `make check | grep -v '^ok'` is the question you actually want
-answered, and a stable first word is what makes it askable.
-
-`make check` passes the flag. No separate `scripts/check.bash` — `make` is the entry point,
-so a target is the whole interface.
-
-One walk, one decision table, so the reported state can't drift from the acted-on state.
-It also gives a way to preview the run before pointing `link` at a home directory for the
-first time.
-
-Scope is the state of `src/`'s targets in `$HOME`, not a search for untracked dotfiles in
-`$HOME` that might be worth adding — that's a different job with no natural boundary.
-
-### D2 — `link` says where the backups went
+### D1 — `link` says where the backups went
 
 After the walk, if the timestamped backup directory exists, print its path:
 
@@ -61,7 +37,7 @@ backed up — no counter needed, and nothing prints on a run that backed nothing
 the per-file "Backing up …" lines never name the timestamped directory, so recovering
 means going and looking for it.
 
-### D3 — `add` is idempotent for an already-tracked file
+### D2 — `add` is idempotent for an already-tracked file
 
 Today the `-e "$src"` check fires first and reports `File …/src/.zshrc already exists` with
 exit 1 — an error for a situation where nothing is wrong. `src/` already holding the file
@@ -74,7 +50,7 @@ covers two different situations, and they get different answers:
   reconciles them, since that's the command that backs up the `$HOME` copy and links the
   tracked one.
 
-### D4 — `add` rejects directories, and `link` refuses to act on a file that is its own target
+### D3 — `add` rejects directories, and `link` refuses to act on a file that is its own target
 
 Two fixes for the destruction path in the Facts above.
 
@@ -87,7 +63,7 @@ otherwise distinguish "a separate copy with identical contents" from "literally 
 Anything else that produces the state — a hand-made symlink in `$HOME`, a restore gone
 sideways — hits the same destruction without it.
 
-### D5 — `restore` keeps `fzf`, checks for it, and refuses an empty selection
+### D4 — `restore` keeps `fzf`, checks for it, and refuses an empty selection
 
 `fzf` stays: filtering beats scanning once backups accumulate, and bash's `select` lays its
 menu out in columns, which is unreadable for a list of timestamps. It becomes a documented
@@ -114,7 +90,7 @@ local backup
 backup=$(printf '%s\n' "$PWD"/backup/*/ | fzf) || return 1
 ```
 
-### D6 — `restore_file` stops aborting the run partway
+### D5 — `restore_file` stops aborting the run partway
 
 Two guards, both against the same failure mode: `restore` giving up mid-recovery under
 `set -e` and leaving a half-restored home directory with no record of what got through.
@@ -125,18 +101,18 @@ Two guards, both against the same failure mode: `restore` giving up mid-recovery
 - **`mkdir -p` the destination's parent before `cp`.** A backup of a nested path is
   otherwise unrestorable once the intermediate directories are gone.
 
-### D7 — `restore` puts files back and nothing else; the README says what that means
+### D6 — `restore` puts files back and nothing else; the README says what that means
 
 `restore` replaces the symlink with the backed-up file and leaves `src/` untouched, so the
 next `make link` sees a differing regular file, backs it up and re-links — undoing the
 restore. That stays the behaviour, and the README states it: the repo's version is
 re-applied on the next `link` unless the file is removed from `src/` by hand.
 
-`make check` (D1) reports the pending re-link as a `backed-up` line, so the state is
+`make check` reports the pending re-link as a `backed-up` line, so the state is
 visible rather than waiting to surprise. Untracking stays manual; a command for it can come
 later if it turns out to be a routine step.
 
-### D8 — `restore` reports what it restored
+### D7 — `restore` reports what it restored
 
 `restore_file` runs silently today, so `make restore` returns to a prompt with no record of
 what it touched. It prints one line per file in the shape of `link`'s `report` —
@@ -147,48 +123,41 @@ restored  ~/.zshrc
 restored  ~/.config/nvim/init.lua
 ```
 
-### D9 — `check` Makefile target
+### D8 — README covers the decision table and the two gotchas
 
-Add **`check`**, running `bash $(SCRIPTS_DIR)/link.bash --dry-run` (D1), and list it in
-`.PHONY` with the others.
+Three sections:
 
-### D10 — README covers the decision table, the new commands and the two gotchas
-
-Four sections:
-
-- **Commands** — `link`, `check`, `add`, `restore`, `test`. Adds `check`.
 - **Decision table** — the eight outcomes `link` prints (`ok`, `linked`, `replaced`,
   `backed-up`, `relinked`, `repaired`, `skipped`, `ignored`) and what each means for the
-  file. This is what the current four bullets don't answer, and it's what you want to read
+  file. This is what the Commands section doesn't answer, and it's what you want to read
   before pointing this at a home directory: what happens when a real file is already at
   the target.
-- **`fzf` is required** for `restore` (D5).
+- **`fzf` is required** for `restore` (D4).
 - **Restore doesn't stick** — the next `link` re-applies the repo's version unless the file
-  is removed from `src/`, and `make check` shows it pending (D7).
+  is removed from `src/`, and `make check` shows it pending (D6).
 
-### D11 — Test coverage
+### D9 — Test coverage
 
-Nine new scenarios, in the shape of the existing thirteen: one file per scenario, a
+Eight new scenarios, in the shape of the existing fourteen: one file per scenario, a
 `test_body` taking `tmp_dir` as `$1`, ending with `in_temp_dir test_body`.
 
 **link**
 
-1. `src` and `dest` are the same file — refused, file survives (D4)
-2. `--dry-run` changes nothing on disk (D1)
+1. `src` and `dest` are the same file — refused, file survives (D3)
 
 **add**
 
-3. Directory — refused (D4)
-4. Already tracked — exit 0, nothing changes (D3)
-5. `src/` has it but `$HOME` has a regular file — exit 1 (D3)
+2. Directory — refused (D3)
+3. Already tracked — exit 0, nothing changes (D2)
+4. `src/` has it but `$HOME` has a regular file — exit 1 (D2)
 
 **restore**
 
-6. Empty selection — exits without touching anything (D5)
-7. No backups at all — exits with a message (D5)
-8. Destination missing — restores it anyway (D6)
-9. Nested path with missing parents — restores it anyway (D6)
+5. Empty selection — exits without touching anything (D4)
+6. No backups at all — exits with a message (D4)
+7. Destination missing — restores it anyway (D5)
+8. Nested path with missing parents — restores it anyway (D5)
 
-1, 3 and 6 are the safety ones: 1 and 3 are the two halves of the verified data-loss path,
-6 is the root-filesystem walk. No test for D2's backup-path message — asserting on output
+1, 2 and 5 are the safety ones: 1 and 2 are the two halves of the verified data-loss path,
+5 is the root-filesystem walk. No test for D1's backup-path message — asserting on output
 text is brittle for little return.
