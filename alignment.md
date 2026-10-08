@@ -15,24 +15,7 @@ all 21 test files.
 
 ## Decisions
 
-### D1 — `link` says where the backups went
-
-After the walk, if the timestamped backup directory exists, print its path:
-
-```bash
-if [[ -d "$backup_path" ]]; then
-  echo "Backed up files are in ${backup_path#"$PWD"/}"
-fi
-```
-
-`backup_dest` creates it lazily, so its existence is the record of whether anything was
-backed up — no counter needed, and nothing prints on a run that backed nothing up. Today
-the `backed-up`, `relinked` and `repaired` lines never name the timestamped directory, so
-recovering means going and looking for it.
-
-No test for it — asserting on output text is brittle for little return.
-
-### D2 — `restore` puts files back and nothing else; the README says what that means
+### D1 — `restore` puts files back and nothing else; the README says what that means
 
 `restore` replaces the symlink with the backed-up file and leaves `src/` untouched, so the
 next `make link` sees a differing regular file, backs it up and re-links — undoing the
@@ -43,7 +26,7 @@ re-applied on the next `link` unless the file is removed from `src/` by hand.
 visible rather than waiting to surprise. Untracking stays manual; a command for it can come
 later if it turns out to be a routine step.
 
-### D3 — README covers the decision table and the two gotchas
+### D2 — README covers the decision table and the two gotchas
 
 Three sections:
 
@@ -54,4 +37,4 @@ Three sections:
   the target.
 - **`fzf` is required** for `restore`: `restore.bash` refuses to run without it.
 - **Restore doesn't stick** — the next `link` re-applies the repo's version unless the file
-  is removed from `src/`, and `make check` shows it pending (D2).
+  is removed from `src/`, and `make check` shows it pending (D1).

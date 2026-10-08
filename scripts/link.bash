@@ -124,3 +124,7 @@ walk_src() {
 }
 
 walk_src "$src_abs_path"
+
+if [[ -d "$backup_path" ]]; then
+  echo "Backed up files are in ${backup_path#"$PWD"/}"
+fi
