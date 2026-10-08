@@ -9,7 +9,9 @@ test_body() {
   echo ".example" | \
   HOME="$tmp_dir/home" \
   bash ../scripts/add.bash > /dev/null
+  local status=$?
 
+  test_case "Exits 1" test "$status" = 1
   test_case "File in src remains" test -e src/.example
   test_case "Doesn't create symlink in home" test ! -L home/.example
   test_case "File in home remains" test -e home/.example

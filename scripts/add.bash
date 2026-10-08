@@ -11,8 +11,13 @@ read -r -p "File: ~/" prompt
 src="$PWD/src/$prompt"
 dest="$HOME/$prompt"
 
+if [[ -e "$src" && -L "$dest" && "$(readlink "$dest")" == "$src" ]]; then
+  echo "Already tracked: $dest -> $src"
+  exit 0
+fi
+
 if [[ -e "$src" ]]; then
-  echo "File $src already exists"
+  echo "File $src already exists, run make link to reconcile it with $dest"
   exit 1
 fi
 
