@@ -26,6 +26,11 @@ if [[ ! -e "$dest" ]]; then
   exit 1
 fi
 
+if [[ -d "$dest" ]]; then
+  echo "File $dest is a directory, only files can be tracked"
+  exit 1
+fi
+
 echo "Moving $dest > $src"
 mkdir -p "${src%/*}"
 mv "$dest" "$src"

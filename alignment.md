@@ -6,19 +6,12 @@ we're going to do.
 ## Facts
 
 Verified by reading the scripts, Makefile, README, `tests/run.bash`, `tests/utils.bash` and
-all 10 test files.
+all 16 test files.
 
 - **Repo shape.** 3 scripts (`link`, `add`, `restore`), a 5-target Makefile, 4 tracked
-  dotfiles in `src/`, 14 tests across 3 suites. Single user, macOS.
+  dotfiles in `src/`, 16 tests across 3 suites. Single user, macOS.
 - **bash is 3.2.57**, both `/bin/bash` and on PATH. No namerefs (`local -n`, 4.3+), no
   `declare -g` (4.2+).
-- **`add` on a directory, then `link`, destroys the file — verified.** `add` doesn't check
-  `-d`, so it moves a directory into `src/` and symlinks `$HOME` at it. On the next `link`,
-  `walk_src` recurses into that directory and the destination resolves *through* the
-  symlink back to the source, so `cmp -s "$src" "$dest"` compares a file with itself and
-  reports identical. The identical-contents branch then `rm`s it and links it to itself:
-  contents gone, no backup, and `cat` reports "Too many levels of symbolic links". It is
-  the one branch that deletes without backing up first.
 
 ## Decisions
 
@@ -50,20 +43,7 @@ covers two different situations, and they get different answers:
   reconciles them, since that's the command that backs up the `$HOME` copy and links the
   tracked one.
 
-### D3 — `add` rejects directories, and `link` refuses to act on a file that is its own target
-
-Two fixes for the destruction path in the Facts above.
-
-`add` checks `-d` and exits non-zero. There's no legitimate use for tracking a directory in
-a repo whose linker walks per file, and adding one is what creates the state.
-
-`link` checks `[[ "$src" -ef "$dest" ]]` — same inode — and refuses. Defence in depth: the
-identical-contents branch is the only path that deletes without a backup, and it cannot
-otherwise distinguish "a separate copy with identical contents" from "literally this file".
-Anything else that produces the state — a hand-made symlink in `$HOME`, a restore gone
-sideways — hits the same destruction without it.
-
-### D4 — `restore` keeps `fzf`, checks for it, and refuses an empty selection
+### D3 — `restore` keeps `fzf`, checks for it, and refuses an empty selection
 
 `fzf` stays: filtering beats scanning once backups accumulate, and bash's `select` lays its
 menu out in columns, which is unreadable for a list of timestamps. It becomes a documented
@@ -90,7 +70,7 @@ local backup
 backup=$(printf '%s\n' "$PWD"/backup/*/ | fzf) || return 1
 ```
 
-### D5 — `restore_file` stops aborting the run partway
+### D4 — `restore_file` stops aborting the run partway
 
 Two guards, both against the same failure mode: `restore` giving up mid-recovery under
 `set -e` and leaving a half-restored home directory with no record of what got through.
@@ -101,7 +81,7 @@ Two guards, both against the same failure mode: `restore` giving up mid-recovery
 - **`mkdir -p` the destination's parent before `cp`.** A backup of a nested path is
   otherwise unrestorable once the intermediate directories are gone.
 
-### D6 — `restore` puts files back and nothing else; the README says what that means
+### D5 — `restore` puts files back and nothing else; the README says what that means
 
 `restore` replaces the symlink with the backed-up file and leaves `src/` untouched, so the
 next `make link` sees a differing regular file, backs it up and re-links — undoing the
@@ -112,7 +92,7 @@ re-applied on the next `link` unless the file is removed from `src/` by hand.
 visible rather than waiting to surprise. Untracking stays manual; a command for it can come
 later if it turns out to be a routine step.
 
-### D7 — `restore` reports what it restored
+### D6 — `restore` reports what it restored
 
 `restore_file` runs silently today, so `make restore` returns to a prompt with no record of
 what it touched. It prints one line per file in the shape of `link`'s `report` —
@@ -123,41 +103,35 @@ restored  ~/.zshrc
 restored  ~/.config/nvim/init.lua
 ```
 
-### D8 — README covers the decision table and the two gotchas
+### D7 — README covers the decision table and the two gotchas
 
 Three sections:
 
-- **Decision table** — the eight outcomes `link` prints (`ok`, `linked`, `replaced`,
-  `backed-up`, `relinked`, `repaired`, `skipped`, `ignored`) and what each means for the
-  file. This is what the Commands section doesn't answer, and it's what you want to read
+- **Decision table** — the nine outcomes `link` prints (`ok`, `linked`, `replaced`,
+  `backed-up`, `relinked`, `repaired`, `skipped`, `ignored`, `refused`) and what each means
+  for the file. This is what the Commands section doesn't answer, and it's what you want to read
   before pointing this at a home directory: what happens when a real file is already at
   the target.
-- **`fzf` is required** for `restore` (D4).
+- **`fzf` is required** for `restore` (D3).
 - **Restore doesn't stick** — the next `link` re-applies the repo's version unless the file
-  is removed from `src/`, and `make check` shows it pending (D6).
+  is removed from `src/`, and `make check` shows it pending (D5).
 
-### D9 — Test coverage
+### D8 — Test coverage
 
-Eight new scenarios, in the shape of the existing fourteen: one file per scenario, a
+Six new scenarios, in the shape of the existing sixteen: one file per scenario, a
 `test_body` taking `tmp_dir` as `$1`, ending with `in_temp_dir test_body`.
-
-**link**
-
-1. `src` and `dest` are the same file — refused, file survives (D3)
 
 **add**
 
-2. Directory — refused (D3)
-3. Already tracked — exit 0, nothing changes (D2)
-4. `src/` has it but `$HOME` has a regular file — exit 1 (D2)
+1. Already tracked — exit 0, nothing changes (D2)
+2. `src/` has it but `$HOME` has a regular file — exit 1 (D2)
 
 **restore**
 
-5. Empty selection — exits without touching anything (D4)
-6. No backups at all — exits with a message (D4)
-7. Destination missing — restores it anyway (D5)
-8. Nested path with missing parents — restores it anyway (D5)
+3. Empty selection — exits without touching anything (D3)
+4. No backups at all — exits with a message (D3)
+5. Destination missing — restores it anyway (D4)
+6. Nested path with missing parents — restores it anyway (D4)
 
-1, 2 and 5 are the safety ones: 1 and 2 are the two halves of the verified data-loss path,
-5 is the root-filesystem walk. No test for D1's backup-path message — asserting on output
+3 is the safety one: the root-filesystem walk. No test for D1's backup-path message — asserting on output
 text is brittle for little return.

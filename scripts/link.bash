@@ -80,6 +80,11 @@ sync_src() {
     return
   fi
 
+  if [[ "$src" -ef "$dest" ]]; then
+    report refused "$home_path"
+    return
+  fi
+
   if [[ ! -e "$dest" ]]; then
     link_dest "$src" "$dest"
     report linked "$home_path"
