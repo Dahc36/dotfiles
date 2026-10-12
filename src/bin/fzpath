@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if ! command -v fzf > /dev/null; then
+  echo "fzf is required" >&2
+  exit 1
+fi
+
+start=${1:-.}
+start=${start%/}
+if [[ ! -d "$start" ]]; then
+  echo "$start is not a directory" >&2
+  exit 1
+fi
+
+# the output keeps the start as the caller gave it; with no argument it's relative
+prefix=""
+if (( $# > 0 )); then
+  prefix="$start/"
+fi
+
+# relative to start, kept normalized so ".." only ever appears at the front
+path=""
+
+go_up() {
+  if [[ -z "$path" || "$path" == .. || "$path" == */.. ]]; then
+    path="${path:+$path/}.."
+  elif [[ "$path" == */* ]]; then
+    path="${path%/*}"
+  else
+    path=""
+  fi
+}
+
+location() {
+  local here="$prefix$path"
+  here="${here%/}"
+  echo "${here:-.}"
+}
+
+while true; do
+  dir="$start${path:+/$path}"
+  entry=$({ printf '.\n..\n'; ls -AF "$dir"; } | fzf --header "$(location)/") || exit $?
+
+  case "$entry" in
+    .)
+      location
+      exit 0
+      ;;
+    ..)
+      go_up
+      ;;
+    */)
+      path="${path:+$path/}${entry%/}"
+      ;;
+    *)
+      # drop the ls -F type marker
+      echo "$prefix${path:+$path/}${entry%[@*=>|%]}"
+      exit 0
+      ;;
+  esac
+done
