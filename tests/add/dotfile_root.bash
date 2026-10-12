@@ -5,9 +5,8 @@ test_body() {
 
   echo "system value" > home/.example
 
-  echo ".example" | \
   HOME="$tmp_dir/home" \
-  bash ../scripts/add.bash > /dev/null
+  bash ../scripts/add.bash ".example" > /dev/null
 
   test_case "Creates file in src" test -e src/.example
   test_case "File keeps same contents" test "$(cat src/.example)" = "system value"

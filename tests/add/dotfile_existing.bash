@@ -6,9 +6,8 @@ test_body() {
   echo "value" > src/.example
   echo "value" > home/.example
 
-  echo ".example" | \
   HOME="$tmp_dir/home" \
-  bash ../scripts/add.bash > /dev/null
+  bash ../scripts/add.bash ".example" > /dev/null
   local status=$?
 
   test_case "Exits 1" test "$status" = 1

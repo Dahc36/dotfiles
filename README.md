@@ -17,7 +17,7 @@ From the repo root:
 
 - `make link` symlinks every file in `src/` into `$HOME`
 - `make check` shows what `make link` would do, touching nothing
-- `make add` moves a `$HOME` file into `src/` and symlinks it back
+- `make add` picks a `$HOME` file with `fzpath`, moves it into `src/` and symlinks it back
 - `make restore` puts a backup's files back into `$HOME`, picked with `fzf`
 - `make test` runs the test suite
 

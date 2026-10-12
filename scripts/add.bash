@@ -7,7 +7,28 @@ if [[ ! -d "$PWD/src" ]]; then
   exit 1
 fi
 
-read -r -p "File: ~/" prompt
+if (( $# > 0 )); then
+  prompt="$1"
+else
+  if ! command -v fzpath > /dev/null; then
+    echo "fzpath is required to choose a file" >&2
+    exit 1
+  fi
+  prompt=$(fzpath "$HOME") || exit 1
+  prompt=${prompt#"$HOME"}
+  prompt=${prompt#/}
+fi
+
+if [[ -z "$prompt" ]]; then
+  echo "No file selected" >&2
+  exit 1
+fi
+
+if [[ "$prompt" == .. || "$prompt" == ../* ]]; then
+  echo "File $HOME/$prompt is outside \$HOME, only files under \$HOME can be tracked"
+  exit 1
+fi
+
 src="$PWD/src/$prompt"
 dest="$HOME/$prompt"
 

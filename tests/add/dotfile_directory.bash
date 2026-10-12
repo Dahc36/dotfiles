@@ -6,9 +6,8 @@ test_body() {
   mkdir home/.folder
   echo "contents" > home/.folder/example
 
-  echo ".folder" | \
   HOME="$tmp_dir/home" \
-  bash ../scripts/add.bash > /dev/null
+  bash ../scripts/add.bash ".folder" > /dev/null
   local status=$?
 
   test_case "Exits 1" test "$status" = 1
