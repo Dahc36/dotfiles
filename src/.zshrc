@@ -106,14 +106,4 @@ source $ZSH/oh-my-zsh.sh
 # Run tmux
 if [ "$TMUX" = "" ]; then tmux; fi
 
-# Add .local/bin to path
-export PATH="$HOME/.local/bin:$PATH"
-
-# Add React Native Android vars
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-export PATH="$PATH:$ANDROID_HOME/emulator"
-export PATH="$PATH:$ANDROID_HOME/platform-tools"
-
-eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-
 eval "$(mise activate zsh)"
