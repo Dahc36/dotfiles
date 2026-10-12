@@ -27,7 +27,24 @@ backup_path="$PWD/backup/$timestamp"
 report() {
   local outcome="$1"
   local path="$2"
-  printf '%-10s %s\n' "$outcome" "$path"
+
+  if [[ ! -t 1 ]]; then
+    printf '%-10s %s\n' "$outcome" "$path"
+    return
+  fi
+
+  local green=$(tput setaf 2)
+  local yellow=$(tput setaf 3)
+  local reset=$(tput sgr0)
+
+  local color=""
+  case "$outcome" in
+    added | adopted) color="$green" ;;
+    unchanged) ;;
+    *) color="$yellow" ;;
+  esac
+
+  printf '%s%-10s %s%s\n' "$color" "$outcome" "$path" "$reset"
 }
 
 link_dest() {

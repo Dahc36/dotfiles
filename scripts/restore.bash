@@ -12,7 +12,15 @@ fi
 report() {
   local outcome="$1"
   local path="$2"
-  printf '%-9s %s\n' "$outcome" "$path"
+
+  if [[ ! -t 1 ]]; then
+    printf '%-9s %s\n' "$outcome" "$path"
+    return
+  fi
+
+  local green=$(tput setaf 2)
+  local reset=$(tput sgr0)
+  printf '%s%-9s %s%s\n' "$green" "$outcome" "$path" "$reset"
 }
 
 select_backup() {
