@@ -6,6 +6,7 @@ test_suites=(
   "add"
   "diff"
   "link"
+  "pull"
   "restore"
 )
 
