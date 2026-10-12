@@ -4,6 +4,7 @@ set -euo pipefail
 
 test_suites=(
   "add"
+  "diff"
   "link"
   "restore"
 )
