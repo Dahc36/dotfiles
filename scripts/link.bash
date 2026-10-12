@@ -27,7 +27,7 @@ backup_path="$PWD/backup/$timestamp"
 report() {
   local outcome="$1"
   local path="$2"
-  printf '%-9s %s\n' "$outcome" "$path"
+  printf '%-10s %s\n' "$outcome" "$path"
 }
 
 link_dest() {
@@ -65,13 +65,13 @@ sync_src() {
 
   if [[ -L "$dest" ]]; then
     if [[ "$(readlink "$dest")" == "$src" ]]; then
-      report ok "$home_path"
+      report unchanged "$home_path"
       return
     fi
 
     local outcome=repaired
     if [[ -e "$dest" ]]; then
-      outcome=relinked
+      outcome=redirected
     fi
 
     backup_dest "$dest"
@@ -87,7 +87,7 @@ sync_src() {
 
   if [[ ! -e "$dest" ]]; then
     link_dest "$src" "$dest"
-    report linked "$home_path"
+    report added "$home_path"
     return
   fi
 
@@ -99,13 +99,13 @@ sync_src() {
   if cmp -s "$src" "$dest"; then
     remove_dest "$dest"
     link_dest "$src" "$dest"
-    report replaced "$home_path"
+    report adopted "$home_path"
     return
   fi
 
   backup_dest "$dest"
   link_dest "$src" "$dest"
-  report backed-up "$home_path"
+  report replaced "$home_path"
 }
 
 walk_src() {

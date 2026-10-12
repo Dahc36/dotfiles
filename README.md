@@ -25,17 +25,17 @@ From the repo root:
 
 One line per file: an outcome and the `$HOME` path.
 
-| outcome     | found at the target            | what `link` does                 |
-| ----------- | ------------------------------ | -------------------------------- |
-| `ok`        | a symlink to `src/`            | nothing                          |
-| `linked`    | nothing                        | creates the symlink              |
-| `replaced`  | a file with identical contents | removes it, creates the symlink  |
-| `backed-up` | a file with different contents | backs it up, creates the symlink |
-| `relinked`  | a symlink pointing elsewhere   | backs it up, creates the symlink |
-| `repaired`  | a broken symlink               | backs it up, creates the symlink |
-| `skipped`   | a directory                    | nothing                          |
-| `ignored`   | a `.DS_Store` in `src/`        | nothing                          |
-| `refused`   | the `src/` file itself         | nothing                          |
+| outcome      | found at the target            | what `link` does                 |
+| ------------ | ------------------------------ | -------------------------------- |
+| `unchanged`  | a symlink to `src/`            | nothing                          |
+| `added`      | nothing                        | creates the symlink              |
+| `adopted`    | a file with identical contents | removes it, creates the symlink  |
+| `replaced`   | a file with different contents | backs it up, creates the symlink |
+| `redirected` | a symlink pointing elsewhere   | backs it up, creates the symlink |
+| `repaired`   | a broken symlink               | backs it up, creates the symlink |
+| `skipped`    | a directory                    | nothing                          |
+| `ignored`    | a `.DS_Store` in `src/`        | nothing                          |
+| `refused`    | the `src/` file itself         | nothing                          |
 
 Backups go to `backup/<timestamp>/`, printed at the end of the run.
 
@@ -51,4 +51,4 @@ Two outcomes need you:
 and re-links the repo's version. To keep it:
 
 1. Remove it from `src/`
-2. Run `make check` and confirm it no longer shows as `backed-up`
+2. Run `make check` and confirm it no longer shows
