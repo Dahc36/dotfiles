@@ -108,5 +108,8 @@ if [ "$TMUX" = "" ]; then tmux; fi
 
 eval "$(mise activate zsh)"
 
+# fzf key bindings: ctrl-r history, ctrl-t files, alt-c cd
+source <(fzf --zsh)
+
 # shell functions of my own live in ~/.zsh
 source ~/.zsh/git.zsh
