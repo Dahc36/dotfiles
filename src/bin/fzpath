@@ -23,6 +23,9 @@ fi
 # relative to start, kept normalized so ".." only ever appears at the front
 path=""
 
+# --no-clear keeps fzf's screen up between levels; restore the terminal on any exit
+trap 'tput rmcup > /dev/tty' EXIT
+
 go_up() {
   if [[ -z "$path" || "$path" == .. || "$path" == */.. ]]; then
     path="${path:+$path/}.."
@@ -41,7 +44,7 @@ location() {
 
 while true; do
   dir="$start${path:+/$path}"
-  entry=$({ printf '.\n..\n'; ls -AF "$dir"; } | fzf --header "$(location)/") || exit $?
+  entry=$({ printf '.\n..\n'; ls -AF "$dir"; } | fzf --no-clear --header "$(location)/") || exit $?
 
   case "$entry" in
     .)
