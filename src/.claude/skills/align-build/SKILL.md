@@ -1,6 +1,6 @@
 ---
 name: align-build
-description: Implement the next reasonable commit of the work agreed in alignment.md, then remove what was done from alignment.md. Only when I invoke it, or when /align-flow delegates to it; never on your own initiative.
+description: Implement the next reasonable commit of the work agreed in alignment.md, then remove what was done from alignment.md. Only when I invoke it, or when another skill delegates to it; never on your own initiative.
 ---
 
 Implement one commit's worth of the work agreed in `alignment.md`, so that each call leaves less pending.

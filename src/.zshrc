@@ -107,3 +107,6 @@ source $ZSH/oh-my-zsh.sh
 if [ "$TMUX" = "" ]; then tmux; fi
 
 eval "$(mise activate zsh)"
+
+# shell functions of my own live in ~/.zsh
+source ~/.zsh/git.zsh

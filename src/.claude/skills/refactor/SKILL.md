@@ -1,7 +1,6 @@
 ---
 name: refactor
-description: Refactor the current change (or a given target) by applying all of my coding practices with judgment.
-disable-model-invocation: true
+description: Refactor the current change (or a given target) by applying all of my coding practices with judgment. Only when I invoke it, or when another skill delegates to it; never on your own initiative.
 argument-hint: '[target files or directory]'
 ---
 
