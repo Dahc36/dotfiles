@@ -35,7 +35,7 @@ Findings are in the order GitHub's "Files changed" tab shows them: files as `git
 
 Each finding is one block:
 
-- a header line, `## <number>. <bug|quality> <path>:<line>`, with `<path>:<start>-<end>` for a range
+- a header line, `## <number>. <BUG|QUALITY> <path>:<line>`, with `<path>:<start>-<end>` for a range
 - the comment body, ready to paste into GitHub as a review comment on that location
 
 The location is always a line the PR touched, even when the file has untouched lines GitHub would accept a comment on. When the finding lives on an untouched line, in a touched file or not, anchor it to the touched line that caused it (the deleted token, the renamed prop, the changed type) and name the real file and line in the body. A fix given for another location goes in a regular fenced block, never a ```suggestion block, since it would not apply at the anchor.
