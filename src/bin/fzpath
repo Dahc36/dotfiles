@@ -2,65 +2,108 @@
 
 set -euo pipefail
 
-if ! command -v fzf > /dev/null; then
-  echo "fzf is required" >&2
-  exit 1
-fi
+# fzf calls the script back as `fzpath --enter <line>` to get the actions for a picked line;
+# the current directory is kept in fzf's prompt, so the call reads it back from the prompt
 
-start=${1:-.}
-start=${start%/}
-if [[ ! -d "$start" ]]; then
-  echo "$start is not a directory" >&2
-  exit 1
-fi
-
-# the output keeps the start as the caller gave it; with no argument it's relative
-prefix=""
-if (( $# > 0 )); then
-  prefix="$start/"
-fi
-
-# relative to start, kept normalized so ".." only ever appears at the front
-path=""
-
-# --no-clear keeps fzf's screen up between levels; restore the terminal on any exit
-trap 'tput rmcup > /dev/tty' EXIT
-
-go_up() {
-  if [[ -z "$path" || "$path" == .. || "$path" == */.. ]]; then
-    path="${path:+$path/}.."
-  elif [[ "$path" == */* ]]; then
-    path="${path%/*}"
-  else
+path_from_prompt() {
+  local prefix="$1"
+  local prompt="$2"
+  local path="${prompt#"$prefix"}"
+  path="${path%/}"
+  if [[ "$path" == . ]]; then
     path=""
   fi
+  echo "$path"
 }
 
 location() {
+  local prefix="$1"
+  local path="$2"
   local here="$prefix$path"
   here="${here%/}"
   echo "${here:-.}"
 }
 
-while true; do
-  dir="$start${path:+/$path}"
-  entry=$({ printf '.\n..\n'; ls -AF "$dir"; } | fzf --no-clear --header "$(location)/") || exit $?
+# ".." only ever appears at the front of the path
+go_up() {
+  local path="$1"
+  if [[ -z "$path" || "$path" == .. || "$path" == */.. ]]; then
+    echo "${path:+$path/}.."
+  elif [[ "$path" == */* ]]; then
+    echo "${path%/*}"
+  else
+    echo ""
+  fi
+}
 
-  case "$entry" in
+list_entries() {
+  local start="$1"
+  local path="$2"
+  echo "reload(printf '.\\n..\\n'; ls -AF $(printf '%q' "$start${path:+/$path}"))"
+}
+
+navigate_to() {
+  local start="$1"
+  local prefix="$2"
+  local path="$3"
+  echo "change-prompt($(location "$prefix" "$path")/)+$(list_entries "$start" "$path")"
+}
+
+pick() {
+  local path="$1"
+  echo "become(echo $(printf '%q' "$path"))"
+}
+
+enter() {
+  local start="$1"
+  local prefix="$2"
+  local prompt="$3"
+  local line="$4"
+  local path
+  path=$(path_from_prompt "$prefix" "$prompt")
+
+  case "$line" in
     .)
-      location
-      exit 0
+      pick "$(location "$prefix" "$path")"
       ;;
     ..)
-      go_up
+      navigate_to "$start" "$prefix" "$(go_up "$path")"
       ;;
     */)
-      path="${path:+$path/}${entry%/}"
+      navigate_to "$start" "$prefix" "${path:+$path/}${line%/}"
       ;;
     *)
       # drop the ls -F type marker
-      echo "$prefix${path:+$path/}${entry%[@*=>|%]}"
-      exit 0
+      pick "$prefix${path:+$path/}${line%[@*=>|%]}"
       ;;
   esac
-done
+}
+
+open_finder() {
+  if ! command -v fzf > /dev/null; then
+    echo "fzf is required" >&2
+    exit 1
+  fi
+
+  local start=${1:-.}
+  start=${start%/}
+  if [[ ! -d "$start" ]]; then
+    echo "$start is not a directory" >&2
+    exit 1
+  fi
+
+  # the output keeps the start as the caller gave it; with no argument it's relative
+  local prefix="${1:+$start/}"
+
+  FZPATH_START="$start" FZPATH_PREFIX="$prefix" exec fzf \
+    --layout=reverse \
+    --prompt "$(location "$prefix" "")/" \
+    --bind "start:$(list_entries "$start" "")" \
+    --bind "load:clear-query" \
+    --bind "enter:transform($0 --enter {})"
+}
+
+case "${1:-}" in
+  --enter) enter "$FZPATH_START" "$FZPATH_PREFIX" "$FZF_PROMPT" "$2" ;;
+  *) open_finder "$@" ;;
+esac
