@@ -15,3 +15,24 @@ fzgco() {
   fi
   git checkout "$branch"
 }
+
+# fzgprune: pick local branches with fzf (tab marks several) and delete them; unmerged ones ask before -D
+fzgprune() {
+  local current
+  current=$(git rev-parse --abbrev-ref HEAD) || return
+
+  local branches
+  branches=$({
+    echo "$current"
+    git branch --format='%(refname:lstrip=2)' | grep -vxF "$current"
+  } | fzf --layout=reverse --header-lines=1 --multi) || return
+
+  local branch answer
+  for branch in ${(f)branches}; do
+    git branch -d "$branch" && continue
+    read "answer?Force delete $branch? [y/N] "
+    if [[ $answer == y ]]; then
+      git branch -D "$branch"
+    fi
+  done
+}
