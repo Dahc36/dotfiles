@@ -36,3 +36,32 @@ fzgprune() {
     fi
   done
 }
+
+# fzgcode: pick changed files with fzf (tab marks several) and open them in VS Code
+fzgcode() {
+  local root
+  root=$(git rev-parse --show-toplevel) || return
+
+  local yellow=$'\e[33m' green=$'\e[32m' reset=$'\e[m'
+  # from the root, as ls-files only lists under the cwd; quotePath off keeps
+  # non-ASCII names as they are instead of octal escapes
+  local changed=$({
+    git -C "$root" -c core.quotePath=false diff --name-only --diff-filter=d HEAD |
+      sed "s/.*/$yellow&$reset/"
+    git -C "$root" -c core.quotePath=false ls-files --others --exclude-standard |
+      sed "s/.*/$green&$reset/"
+  })
+  if [[ -z $changed ]]; then
+    echo "Nothing changed" >&2
+    return 1
+  fi
+
+  local files
+  files=$(fzf --layout=reverse --multi --ansi <<< "$changed") || return
+
+  local file paths=()
+  for file in ${(f)files}; do
+    paths+=("$root/$file")
+  done
+  code "${paths[@]}"
+}
