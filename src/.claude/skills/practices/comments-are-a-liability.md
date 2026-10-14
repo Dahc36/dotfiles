@@ -13,6 +13,7 @@ Code can change and comments can be left stale, creating confusion and noise.
 Comments should be short, containing only the necessary information to keep reading the code.
 Comments should be easy to read along with the code.
 Comments should be read as part of the code, not a separate knowledge base.
+A comment that keeps growing is a signal: the code it explains may need a better name or shape instead.
 
 ## Comments should complement code's readability
 
