@@ -35,7 +35,7 @@ Findings are in the order GitHub's "Files changed" tab shows them: files as `git
 
 Each finding is one block:
 
-- a header line, `## <number>. <BUG|QUALITY> <path>:<line>`, with `<path>:<start>-<end>` for a range
+- a header line, `## <number>. <BUG|QUALITY> <path>:<line>`, with `<path>:<start>-<end>` for a range and the tier before the kind when there is one, `## <number>. BLOCK BUG <path>:<line>`
 - the comment body, ready to paste into GitHub as a review comment on that location
 
 The location is always a line the PR touched, even when the file has untouched lines GitHub would accept a comment on. When the finding lives on an untouched line, in a touched file or not, anchor it to the touched line that caused it (the deleted token, the renamed prop, the changed type) and name the real file and line in the body. A fix given for another location goes in a regular fenced block, never a ```suggestion block, since it would not apply at the anchor.
@@ -46,6 +46,15 @@ It is always in English. Identifiers and business terms that already exist in an
 Every claim that code can prove gets a GitHub permalink, `https://github.com/<owner>/<repo>/blob/<sha>/<path>#L<n>` or `#L<a>-L<b>`. The sha is the PR head for code on the branch and the merge base, `git merge-base origin/<base> HEAD`, for code the PR removed. The links go in a `Sources:` list at the end of the finding, one bullet per claim with a few words naming what the line shows, never inline in the prose. A finding whose claims are all on the anchored lines, or in the same file, has no list.
 
 When the fix is a drop-in replacement of the anchored lines, give it in a ```suggestion block, so the author can apply it in one click. When it is not a drop-in, give the shape of it in a regular fenced block with the language. Code in either follows my coding practices.
+
+## Tiers
+
+A tier marks a finding I can act on without thinking twice: it is about confidence, not severity.
+
+- `BLOCK`: high confidence that a change is needed. A confirmed bug that ships wrong behavior, or a CI blind spot that keeps hiding bugs of that kind.
+- `NIT`: high confidence that no change is fine. Naming, wording, a nicer shape with no behavioral difference: the author's call, no reply expected.
+
+An unconfirmed bug is a question the author settles, so it never has a tier. Tiers are decided over the finished `review.md`, so that each finding is weighed against the whole set.
 
 ## Process
 
@@ -60,4 +69,5 @@ When the fix is a drop-in replacement of the anchored lines, give it in a ```sug
 4. Bug pass, with only `documenting.md` read from my practices. Fetch the PR's base branch and take the change as `git diff origin/<base>...HEAD`. Read every changed file in full, plus callers and callees when needed to judge a finding.
 5. Quality pass. Read every other `.md` file in `~/.claude/skills/practices/`, then review the touched lines against them and the repo's conventions.
 6. Write `review.md`.
-7. End with one line: how many bugs and quality findings were written, and that `review.md` is at the root.
+7. Triage: read `review.md` top to bottom and add the tier to the headers that earn one. Nothing else in the file changes: no finding is dropped, merged, reworded or reordered.
+8. End with one line: how many bugs and quality findings were written, how many are `BLOCK` and how many `NIT`, and that `review.md` is at the root.
