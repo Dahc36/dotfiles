@@ -74,22 +74,16 @@ _fzg_branches() {
   printf '%s\n' "$header" "${rows[@]}"
 }
 
-# fzgco [git branch flags]: pick a branch with fzf and check it out; -a includes remote branches
+# fzgco: pick a local branch with fzf and check it out;
+# each line shows the branch's PR state on GitHub and its last commit date
 fzgco() {
-  local current
-  current=$(git rev-parse --abbrev-ref HEAD) || return
+  local rows
+  rows=$(_fzg_branches) || return
 
-  local branch
-  branch=$({
-    echo "$current"
-    git branch "$@" --format='%(refname:lstrip=2)' | grep -vxF "$current" | grep -v '/HEAD$'
-  } | fzf --layout=reverse --header-lines=1) || return
+  local picked
+  picked=$(fzf --layout=reverse --header-lines=1 --ansi <<< "$rows") || return
 
-  if ! git show-ref --verify --quiet "refs/heads/$branch"; then
-    # a remote branch: without the remote name, git creates a local tracking branch
-    branch="${branch#*/}"
-  fi
-  git checkout "$branch"
+  git checkout "${picked%% *}"
 }
 
 # fzgprune: pick local branches with fzf (tab marks several) and delete them;
