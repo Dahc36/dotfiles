@@ -26,7 +26,7 @@ Never commit, in the project or in the practices.
 1. Find the practice the issue falls under, if any.
 2. When one covers it, name it and judge whether its wording would have caught this concrete code:
    - sharp enough: say so and stop
-   - too abstract: propose sharpening it, maybe with the example from the fix
+   - too abstract: propose sharpening it
 3. When none covers it, propose an amendment to an existing practice or a new practice, whichever fits.
 4. A proposal is the exact text (the changed lines, or the whole new file) and the reasoning, in chat. Write it to `~/.claude/skills/practices/` only once I agree, after any adjustments.
    1. NOTE: it follows the shape of the existing files (`name:` frontmatter, a title, the reasoning, `##` sub-sections) and my `documenting` practice.
