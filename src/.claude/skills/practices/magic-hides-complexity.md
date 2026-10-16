@@ -4,6 +4,9 @@ name: magic-hides-complexity
 
 # Magic hides complexity
 
+Magical implementations make complex logic appear simple (or opaque) in the surface.
+Complexity should be transparent throughout, to help understand it and ideally simplify it.
+Complexity should never be hidden.
 Code should be explicit in what it does and how.
 
 ## Abstractions should not be magical
