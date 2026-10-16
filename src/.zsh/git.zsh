@@ -1,24 +1,6 @@
-# fzgco [git branch flags]: pick a branch with fzf and check it out; -a includes remote branches
-fzgco() {
-  local current
-  current=$(git rev-parse --abbrev-ref HEAD) || return
-
-  local branch
-  branch=$({
-    echo "$current"
-    git branch "$@" --format='%(refname:lstrip=2)' | grep -vxF "$current" | grep -v '/HEAD$'
-  } | fzf --layout=reverse --header-lines=1) || return
-
-  if ! git show-ref --verify --quiet "refs/heads/$branch"; then
-    # a remote branch: without the remote name, git creates a local tracking branch
-    branch="${branch#*/}"
-  fi
-  git checkout "$branch"
-}
-
-# fzgprune: pick local branches with fzf (tab marks several) and delete them;
-# each line shows the branch's PR state on GitHub and its last commit date
-fzgprune() {
+# _fzg_branches: print one line per local branch, current branch first, sorted
+# by commit date: name, its PR state on GitHub (colored) and its last commit date
+_fzg_branches() {
   local current
   current=$(git rev-parse --abbrev-ref HEAD) || return
 
@@ -68,7 +50,7 @@ fzgprune() {
       esac
     done
   else
-    echo "fzgprune: could not fetch PR state" >&2
+    echo "_fzg_branches: could not fetch PR state" >&2
   fi
 
   local -i name_width=0 status_width=0
@@ -89,10 +71,37 @@ fzgprune() {
       rows+=("$row")
     fi
   done
+  printf '%s\n' "$header" "${rows[@]}"
+}
+
+# fzgco [git branch flags]: pick a branch with fzf and check it out; -a includes remote branches
+fzgco() {
+  local current
+  current=$(git rev-parse --abbrev-ref HEAD) || return
+
+  local branch
+  branch=$({
+    echo "$current"
+    git branch "$@" --format='%(refname:lstrip=2)' | grep -vxF "$current" | grep -v '/HEAD$'
+  } | fzf --layout=reverse --header-lines=1) || return
+
+  if ! git show-ref --verify --quiet "refs/heads/$branch"; then
+    # a remote branch: without the remote name, git creates a local tracking branch
+    branch="${branch#*/}"
+  fi
+  git checkout "$branch"
+}
+
+# fzgprune: pick local branches with fzf (tab marks several) and delete them;
+# each line shows the branch's PR state on GitHub and its last commit date
+fzgprune() {
+  local rows
+  rows=$(_fzg_branches) || return
 
   local picked
-  picked=$(printf '%s\n' "$header" "${rows[@]}" | fzf --layout=reverse --header-lines=1 --multi --ansi) || return
+  picked=$(fzf --layout=reverse --header-lines=1 --multi --ansi <<< "$rows") || return
 
+  local line
   for line in ${(f)picked}; do
     git branch -D "${line%% *}"
   done
