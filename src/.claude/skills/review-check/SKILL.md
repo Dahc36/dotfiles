@@ -12,7 +12,7 @@ Nothing is ever posted, edited or deleted on GitHub, and never offer to.
 
 ## Inputs
 
-- `review.md` at the root of the project, as written by `/review`. Its first line is `# PR <number>: <title>`.
+- `review.md` at the root of the project, as written by `/review`. Its first line is `# PR <number>: <title>`. Its `Unsettled` list, when present, is not findings and is ignored.
 - My pending review: the one review with state `PENDING` by the logged-in user in `gh api repos/<owner>/<repo>/pulls/<number>/reviews`, and its comments from `gh api repos/<owner>/<repo>/pulls/<number>/reviews/<id>/comments --paginate`. No other review, comment or thread is read.
 
 The API gives no line number for a pending comment, so each one is matched to a finding by its `path` and what it says.
