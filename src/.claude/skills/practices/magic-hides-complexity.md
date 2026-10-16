@@ -10,6 +10,7 @@ Code should be explicit in what it does and how.
 
 Abstractions should help keep scope contained, implementations simple and interfaces clear.
 Abstractions should not be used to hide complexity away, they should help solve complexity through simple implementations.
+Existing abstractions that are magical should be avoided when an explicit alternative exists (e.g. `.catch(handler)` over `.then(ok, handler)`).
 
 ## Side effects are magical
 
