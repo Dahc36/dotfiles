@@ -24,3 +24,8 @@ Only when something cannot reasonably be expressed as code, does a comment justi
 ## Comments should not be a crutch for complex code
 
 If the code is not clear enough, refactoring for readability should be preferred over comments.
+
+## Names, types and tests are code too
+
+A comment that repeats what a name, a type or a test already says is redundant.
+A comment that only names a known idiom is a label; the identifier should carry it instead.
