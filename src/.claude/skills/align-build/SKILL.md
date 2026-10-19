@@ -22,7 +22,7 @@ Implement one commit's worth of the work agreed in `alignment.md`, so that each 
 4. Implement the step. Edit the code directly, following the project's existing conventions. Aim for a working implementation. Do not read my coding practices yet.
 5. Find the project's existing checks (tests, type checker, linter) from its config and run the relevant ones. Get them passing.
 6. Only now, invoke the `refactor` skill through the Skill tool, with no arguments, so it runs on the uncommitted diff. It is the full pass every time, however small the step: every practice read fresh, every changed line reviewed. Then run the checks again and get them passing.
-7. Update `alignment.md`:
+7. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`), then update `alignment.md` following it:
    - Remove every fact and decision that only concerned the work now done. The code is the record of it from here on.
    - Keep facts and decisions that still matter for the remaining work, reworded if the done work changes how they read.
    - Add nothing about progress: no done sections, checkmarks, changelog or notes about this step. The file must read as if the done work had never been pending.
