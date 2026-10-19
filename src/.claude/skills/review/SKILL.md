@@ -81,7 +81,7 @@ When the fix is a drop-in replacement of the anchored lines, give it in a ```sug
    - `git status --porcelain` prints anything; untracked files count as dirty
 2. Check out the PR at its latest head: `gh pr checkout <number>`, then `git pull --ff-only`. If the fast-forward fails, say so and stop; never merge or reset.
    NOTE: stay on the PR branch when done.
-3. Read `documenting.md` from my practices, then the context the author shared: the title, the body, and whatever the body links to (issues, docs, Slack threads, other PRs, a file or line the author points at). Nothing else of the PR's code is read yet. Do not read existing review comments or threads: duplicates are fine, and reading them biases the review toward what others already flagged.
+3. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`), then the context the author shared: the title, the body, and whatever the body links to (issues, docs, Slack threads, other PRs, a file or line the author points at). Nothing else of the PR's code is read yet. Do not read existing review comments or threads: duplicates are fine, and reading them biases the review toward what others already flagged.
 4. Write `review.md` with the title and `Intent`, before reading any code, so that `Intent` cannot come from the code.
 5. Read the change. Fetch the PR's base branch and take it as `git diff origin/<base>...HEAD`. Read every changed file in full, plus callers and callees when needed to understand it.
 6. Write `Implementation`.
