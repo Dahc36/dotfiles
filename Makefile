@@ -1,10 +1,12 @@
 SCRIPTS_DIR=./scripts
 TESTS_DIR=./tests
 
-.PHONY: add link check diff pull restore test
+.PHONY: add remove link check diff pull restore test
 
 add:
 	bash $(SCRIPTS_DIR)/add.bash
+remove:
+	bash $(SCRIPTS_DIR)/remove.bash
 link:
 	bash $(SCRIPTS_DIR)/link.bash
 check:

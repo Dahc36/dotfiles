@@ -1,0 +1,16 @@
+source tests/utils.bash
+
+test_body() {
+  local tmp_dir="$1"
+
+  echo "tracked" > src/.example
+
+  HOME="$tmp_dir/home" \
+  bash ../scripts/remove.bash "src/.example" > /dev/null
+  local status=$?
+
+  test_case "Exits 0" test "$status" = 0
+  test_case "Removes file from src" test ! -e src/.example
+}
+
+in_temp_dir test_body

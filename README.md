@@ -20,6 +20,7 @@ From the repo root:
 - `make diff` shows what `make link` would change in a `$HOME` file
 - `make pull` copies a `$HOME` file over its tracked copy
 - `make add` picks a `$HOME` file with `fzpath`, moves it into `src/` and symlinks it back
+- `make remove` picks a `src/` file with `fzf`, deletes it and its symlink in `$HOME`
 - `make restore` puts a backup's files back into `$HOME`, picked with `fzf`
 - `make test` runs the test suite
 
