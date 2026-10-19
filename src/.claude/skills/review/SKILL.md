@@ -23,7 +23,7 @@ Two kinds, found in two separate passes, in this order:
    3. Then it is settled, wherever the answer is: the code path read end to end, with callers and data shapes; a dependency's installed source, docs, changelog and issue tracker; a throwaway experiment (a script, a REPL call, a one-off test written and deleted) when reading is not enough. Never run the project's test suite or checks; CI does that. Experiments leave the working tree as they found it.
    4. A settled bug is stated as a fact: the failing input, the wrong outcome, and the evidence in a form the author can rerun. The command or script and its output, in a fenced block, when something was run; permalinks when it was settled by reading. A claim is settled only if the finding shows how.
    5. A bug stays unsettled only when the answer sits with the author or behind something out of reach (production data, a gated system). The finding then says what was checked and gives the way to settle it: a query to run in production, a manual step, logs or a metric to watch, a pressure test, a sandbox call, or a question to a named person.
-   6. Every bug finding states the consequence: who notices and how, or for a latent one, when it would start to.
+   6. Every bug finding states the consequence: who notices and how, or for a latent one, when it would start to. It is settled like the bug: verified when it can be (where the code runs, who reaches it), and otherwise stated as a potential consequence and marked unverified.
    7. Bugs are reported wherever the change causes them, on lines the PR touched or not.
    8. A suspicion that could not be made checkable is not a finding. It goes in the `Unsettled` list at the end of `review.md`.
    9. A bug that CI should have caught (a type error, a lint failure, a failing test) and did not is reported as a CI blind spot, not as the bug.
@@ -88,5 +88,6 @@ When the fix is a drop-in replacement of the anchored lines, give it in a ```sug
 7. Bug pass.
 8. Quality pass. Read every other `.md` file in `~/.claude/skills/practices/`, then review the touched lines against them and the repo's conventions.
 9. Write the findings and the `Unsettled` list.
-10. Check that `git status --porcelain` prints only `review.md`; remove whatever an experiment left behind.
-11. End with one line: how many bugs and quality findings were written, how many of the bugs are unsettled, how many suspicions are in `Unsettled`, and that `review.md` is at the root.
+10. Apply `documenting.md` to `review.md`.
+11. Check that `git status --porcelain` prints only `review.md`; remove whatever an experiment left behind.
+12. End with one line: how many bugs and quality findings were written, how many of the bugs are unsettled, how many suspicions are in `Unsettled`, and that `review.md` is at the root.
