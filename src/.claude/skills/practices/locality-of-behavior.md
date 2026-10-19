@@ -18,3 +18,9 @@ Locality should not clash with established conventions for the repo or the tools
 The name the rest of the code uses for a thing belongs on its declaration.
 Declaring something under a generic name and giving it its real name only when exposing it, or leaving it nameless so each consumer picks a name, hides what the file defines from anyone reading only that file.
 Declare the final name once and expose it under that same name.
+
+## Things are declared where they are used
+
+A value declared far from its only use has to be carried in the reader's head across code that does not need it.
+Declare it right before the code that uses it, after any early return that would make it unnecessary.
+Gathering declarations at the top of a scope is a habit, not a reason.
