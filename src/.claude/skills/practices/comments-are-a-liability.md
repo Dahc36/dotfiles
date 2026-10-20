@@ -29,3 +29,5 @@ If the code is not clear enough, refactoring for readability should be preferred
 
 A comment that repeats what a name, a type or a test already says is redundant.
 A comment that only names a known idiom is a label; the identifier should carry it instead.
+A comment that justifies a condition describes a behavior, and behavior is what tests are for; the condition's shape carries the rest.
+A comment is only justified once nothing else in the code says it; where a test could say it, the test is the better place.
