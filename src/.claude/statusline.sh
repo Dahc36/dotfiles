@@ -31,6 +31,19 @@ for ((i=0; i<bar_cells; i++)); do
 done
 line+="${sep}$(color_from "$tokens" 140000 "$bar_tokens")${bar} $(( tokens / 1000 ))k${reset}"
 
+cache=$(echo "$input" | jq -r '.prompt_cache // empty | if .warm then "warm" else "cold" end')
+if [ "$cache" = "cold" ]; then
+  recache=$(echo "$input" | jq -r '.prompt_cache.recache_tokens_if_cold // 0')
+  line+="${sep}cache ${red}cold ~$(( recache / 1000 ))k${reset}"
+elif [ "$cache" = "warm" ]; then
+  expires_at=$(echo "$input" | jq -r '.prompt_cache.expires_at')
+  seconds_left=$(( expires_at - $(date +%s) ))
+  minutes_left=$(( (seconds_left + 59) / 60 ))
+  warn_minutes=15
+  if [ "$minutes_left" -le "$warn_minutes" ]; then cache_color=$yellow; else cache_color=$green; fi
+  line+="${sep}cache ${cache_color}${minutes_left}m${reset}"
+fi
+
 week=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty | floor')
 [ -n "$week" ] && line+="${sep}week $(color_from "$week" 50 75)${week}%${reset}"
 
