@@ -1,0 +1,17 @@
+{
+  "syncClaudeAiSkills": false,
+  "model": "fable",
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "feedbackDrafts": "off",
+  "modelSettings": {
+    "claude-fable-5-1": {
+      "effortLevel": "high"
+    }
+  },
+  "tui": "default",
+  "theme": "dark",
+  "editorMode": "normal"
+}
