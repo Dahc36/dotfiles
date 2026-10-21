@@ -66,13 +66,14 @@ _fzg_pr_states() {
 }
 
 # _fzg_rows: turn the tab-separated lines read from stdin into aligned fzf rows,
-# coloring the status: merged green, closed red, draft and open yellow
+# coloring the status: merged green, closed red, draft and open yellow, and a
+# dim `…` where it is still empty
 _fzg_rows() {
   local names=() dates=() statuses=() line
   for line in ${(f)"$(cat)"}; do
     names+=("${line%%$'\t'*}")
     dates+=("${${line#*$'\t'}%%$'\t'*}")
-    statuses+=("${line##*$'\t'}")
+    statuses+=("${${line##*$'\t'}:-…}")
   done
 
   local -i name_width=0 date_width=0 i
@@ -81,12 +82,13 @@ _fzg_rows() {
     (( ${#dates[$i]} > date_width )) && date_width=${#dates[$i]}
   done
 
-  local red=$'\e[31m' green=$'\e[32m' yellow=$'\e[33m' reset=$'\e[m' color
+  local red=$'\e[31m' green=$'\e[32m' yellow=$'\e[33m' dim=$'\e[2m' reset=$'\e[m' color
   for i in {1..$#names}; do
     case ${statuses[$i]} in
       *merged*) color=$green ;;
       closed*) color=$red ;;
       draft*|open*) color=$yellow ;;
+      …) color=$dim ;;
       *) color='' ;;
     esac
     printf '%-*s  %-*s  %s%s%s\n' \
@@ -96,14 +98,33 @@ _fzg_rows() {
   done
 }
 
-# fzgco: pick a local branch with fzf and check it out;
+# fzgco: pick a local branch with fzf and check it out; the list shows at once
+# and the PR states fill in when GitHub answers
 fzgco() {
   local lines
   lines=$(_fzg_branches) || return
-  lines=$(_fzg_pr_states <<< "$lines") || echo "fzgco: could not fetch PR state" >&2
 
-  local picked
-  picked=$(_fzg_rows <<< "$lines" | fzf --layout=reverse --header-lines=1 --ansi) || return
+  local fifo
+  fifo=$(mktemp -u) && mkfifo "$fifo" || return
+  # without job control the shell stays quiet about the job
+  setopt localoptions nomonitor
+  ( setopt pipefail; _fzg_pr_states <<< "$lines" | _fzg_rows > "$fifo" ) &
+  local job=$!
+
+  # once fzf has shown the fast list it swaps in the fifo's content
+  local picked fzf_status
+  picked=$(_fzg_rows <<< "$lines" | fzf --layout=reverse --header-lines=1 --ansi \
+    --bind "load:unbind(load)+reload-sync(cat '$fifo')")
+  fzf_status=$?
+
+  if kill -0 $job 2>/dev/null; then
+    # a fetch still running dies on its own once it writes to the dead pipe
+    kill $job
+  elif ! wait $job; then
+    echo "fzgco: could not fetch PR state" >&2
+  fi
+  rm "$fifo"
+  (( fzf_status == 0 )) || return $fzf_status
 
   git checkout "${picked%% *}"
 }
