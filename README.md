@@ -26,11 +26,11 @@ From the repo root:
 
 ## What `link` does with each file
 
-One line per file: an outcome and the `$HOME` path.
+One line per file that needs action: an outcome and the `$HOME` path.
 
 | outcome      | found at the target            | what `link` does                 |
 | ------------ | ------------------------------ | -------------------------------- |
-| `unchanged`  | a symlink to `src/`            | nothing                          |
+| `unchanged`  | a symlink to `src/`            | nothing, and prints nothing      |
 | `added`      | nothing                        | creates the symlink              |
 | `adopted`    | a file with identical contents | removes it, creates the symlink  |
 | `replaced`   | a file with different contents | backs it up, creates the symlink |
@@ -39,6 +39,8 @@ One line per file: an outcome and the `$HOME` path.
 | `skipped`    | a directory                    | nothing                          |
 | `ignored`    | a `.DS_Store` in `src/`        | nothing                          |
 | `refused`    | the `src/` file itself         | nothing                          |
+
+When every file is `unchanged` or `ignored`, the run ends with `Everything is linked`.
 
 Backups go to `backup/<timestamp>/`, printed at the end of the run.
 

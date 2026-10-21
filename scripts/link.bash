@@ -23,10 +23,15 @@ fi
 timestamp=${TIMESTAMP:-$(date +%Y_%m_%d-%H_%M_%S)}
 backup_path="$PWD/backup/$timestamp"
 
+needs_action=false
 
 report() {
   local outcome="$1"
   local path="$2"
+
+  if [[ "$outcome" != ignored ]]; then
+    needs_action=true
+  fi
 
   if [[ ! -t 1 ]]; then
     printf '%-10s %s\n' "$outcome" "$path"
@@ -40,7 +45,6 @@ report() {
   local color=""
   case "$outcome" in
     added | adopted) color="$green" ;;
-    unchanged) ;;
     *) color="$yellow" ;;
   esac
 
@@ -82,7 +86,6 @@ sync_src() {
 
   if [[ -L "$dest" ]]; then
     if [[ "$(readlink "$dest")" == "$src" ]]; then
-      report unchanged "$home_path"
       return
     fi
 
@@ -141,6 +144,10 @@ walk_src() {
 }
 
 walk_src "$src_abs_path"
+
+if [[ "$needs_action" == false ]]; then
+  echo "Everything is linked"
+fi
 
 if [[ -d "$backup_path" ]]; then
   echo "Backed up files are in ${backup_path#"$PWD"/}"
