@@ -1,6 +1,5 @@
 {
   "syncClaudeAiSkills": false,
-  "model": "fable",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
