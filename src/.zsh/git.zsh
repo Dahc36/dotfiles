@@ -98,7 +98,7 @@ _fzg_rows() {
   done
 }
 
-# fzgco: pick a local branch with fzf and check it out; the list shows at once
+# pick a local branch with fzf and check it out; the list shows at once
 # and the PR states fill in when GitHub answers
 fzgco() {
   local lines
@@ -129,8 +129,8 @@ fzgco() {
   git checkout "${picked%% *}"
 }
 
-# fzgprune: pick local branches with fzf (tab marks several) and delete them;
-fzgprune() {
+# pick local branches with fzf (tab marks several) and delete them;
+fzgrm() {
   local lines
   lines=$(_fzg_branches) || return
   lines=$(_fzg_pr_states <<< "$lines") || echo "fzgprune: could not fetch PR state" >&2
@@ -144,7 +144,7 @@ fzgprune() {
   done
 }
 
-# fzgcode: pick changed files with fzf (tab marks several) and open them in VS Code
+# pick changed files with fzf (tab marks several) and open them in VS Code
 fzgcode() {
   local root
   root=$(git rev-parse --show-toplevel) || return
