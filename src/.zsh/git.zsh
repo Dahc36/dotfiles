@@ -1,5 +1,4 @@
 # _fzg_branches: print one line per local branch, current branch first, sorted
-# by commit date: name, its PR state on GitHub (colored) and its last commit date
 _fzg_branches() {
   local current
   current=$(git rev-parse --abbrev-ref HEAD) || return
@@ -44,27 +43,27 @@ _fzg_branches() {
       read -r i number state <<< "$line"
       case $state in
         MERGED) statuses[$i]="merged #$number"; colors[$i]=$green ;;
-        CLOSED) statuses[$i]="abandoned #$number"; colors[$i]=$red ;;
+        CLOSED) statuses[$i]="closed #$number"; colors[$i]=$red ;;
         DRAFT) statuses[$i]="draft #$number"; colors[$i]=$yellow ;;
-        OPEN) statuses[$i]="pending #$number"; colors[$i]=$yellow ;;
+        OPEN) statuses[$i]="open #$number"; colors[$i]=$yellow ;;
       esac
     done
   else
     echo "_fzg_branches: could not fetch PR state" >&2
   fi
 
-  local -i name_width=0 status_width=0
+  local -i name_width=0 date_width=0
   for i in {1..$#branches}; do
     (( ${#branches[$i]} > name_width )) && name_width=${#branches[$i]}
-    (( ${#statuses[$i]} > status_width )) && status_width=${#statuses[$i]}
+    (( ${#dates[$i]} > date_width )) && date_width=${#dates[$i]}
   done
 
   local header=$current rows=() row
   for i in {1..$#branches}; do
-    printf -v row '%-*s  %s%-*s%s  %s' \
+    printf -v row '%-*s  %-*s  %s%s%s' \
       $name_width "${branches[$i]}" \
-      "${colors[$i]}" $status_width "${statuses[$i]}" "${colors[$i]:+$reset}" \
-      "${dates[$i]}"
+      $date_width "${dates[$i]}" \
+      "${colors[$i]}" "${statuses[$i]}" "${colors[$i]:+$reset}"
     if [[ ${branches[$i]} == $current ]]; then
       header=$row
     else
@@ -75,7 +74,6 @@ _fzg_branches() {
 }
 
 # fzgco: pick a local branch with fzf and check it out;
-# each line shows the branch's PR state on GitHub and its last commit date
 fzgco() {
   local rows
   rows=$(_fzg_branches) || return
@@ -87,7 +85,6 @@ fzgco() {
 }
 
 # fzgprune: pick local branches with fzf (tab marks several) and delete them;
-# each line shows the branch's PR state on GitHub and its last commit date
 fzgprune() {
   local rows
   rows=$(_fzg_branches) || return
