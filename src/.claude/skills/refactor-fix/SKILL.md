@@ -28,6 +28,10 @@ Never commit, in the project or in the practices.
    - sharp enough: say so and stop
    - too abstract: propose sharpening it
 3. When none covers it, propose an amendment to an existing practice or a new practice, whichever fits.
+   1. NOTE: practices are principles, not instructions
+   2. NOTE: practices should distill the idea that leads to the right decision
+   3. NOTE: practices should be language agnostic
+   4. NOTE: examples can make a practice too rigid
 4. A proposal is the exact text (the changed lines, or the whole new file) and the reasoning, in chat. Write it to `~/.claude/skills/practices/` only once I agree, after any adjustments.
    1. NOTE: it follows the shape of the existing files (`name:` frontmatter, a title, the reasoning, `##` sub-sections) and my `documenting` practice.
 5. End with the code change, the checks run or skipped and why, and the practice change made or why none.
