@@ -12,7 +12,9 @@ Nothing is ever posted, edited or deleted on GitHub, and never offer to.
 
 ## Inputs
 
-- `review.md` at the root of the project, as written by `/review`. Its first line is `# PR <number>: <title>`. Its `Unsettled` list, when present, is not findings and is ignored.
+- `review.md` at the root of the project, as written by `/review`. Its first line is `# PR <number>: <title>`. Its `Unsettled` list, when present, is not findings and is ignored. It is one of:
+  - untracked: the PR head is `HEAD`
+  - a `review.md` commit, when `HEAD`'s message is `review.md` and `git diff --name-only HEAD~1 HEAD` prints only `review.md`: the PR head is `HEAD~1`
 - My pending review: the one review with state `PENDING` by the logged-in user in `gh api repos/<owner>/<repo>/pulls/<number>/reviews`, and its comments from `gh api repos/<owner>/<repo>/pulls/<number>/reviews/<id>/comments --paginate`. No other review, comment or thread is read.
 
 The API gives no line number for a pending comment, so each one is matched to a finding by its `path` and what it says.
@@ -26,6 +28,7 @@ Printed, not written to a file. Three sections, each a list with one line per it
    - a `suggestion` block that is not a drop-in for its lines
    - a link whose file or line does not exist in the checkout
    NOTE: a hedged estimate, a typo in a name the author can still find, or a claim that is imprecise but leads to the same fix is not wrong. Wording, tone, length and language are never reported.
+   NOTE: comments that hold are not listed, here or anywhere; when none is wrong, the section is one line saying so.
 2. Left out: findings in `review.md` with no matching comment. Each item is the finding's number and its claim in a few words, nothing more; the list is for confirming intent, not for arguing the finding again.
 3. Not in review.md: comments with no matching finding. Each item is verified against the code the same way as section 1 and says whether it holds.
 
@@ -38,9 +41,9 @@ End with one line: how many wrong, left out and new.
 1. Stop and say so, touching nothing, if any of these holds:
    - there is no `review.md` at the root of the project, or its first line is not `# PR <number>: <title>`
    - `gh pr view <number>` finds no PR, or the PR is not open
-   - `git rev-parse HEAD` differs from the PR's `headRefOid`; `review.md` refers to that commit, so delete it and run `/review` again first
+   - the PR head in the checkout differs from the PR's `headRefOid`; `review.md` refers to that commit
    - there is no pending review by me on the PR
 2. Read `review.md` in full and fetch the pending comments.
-3. Match comments to findings, then verify every factual claim in a comment against the code at `HEAD`, reading the lines it names. A claim already verified by `/review` and repeated unchanged in the comment needs no second reading.
+3. Match comments to findings, then verify every factual claim in a comment against the code at the PR head, reading the lines it names. A claim already verified by `/review` and repeated unchanged in the comment needs no second reading.
 4. Print the report.
-5. Offer to delete `review.md`, and delete it only if I say yes.
+5. Offer to discard `review.md`, and do it only if I say yes: `git reset --hard HEAD~1` when `HEAD` is a `review.md` commit, deleting the file otherwise.
