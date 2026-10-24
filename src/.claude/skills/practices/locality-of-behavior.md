@@ -24,3 +24,10 @@ Declare the final name once and expose it under that same name.
 A value declared far from its only use has to be carried in the reader's head across code that does not need it.
 Declare it right before the code that uses it, after any early return that would make it unnecessary.
 Gathering declarations at the top of a scope is a habit, not a reason.
+
+## Locality has a size
+
+A unit is local when a reader can hold it whole.
+Inlining past that point trades one jump for a scope the reader carries across code that does not need it, and the locality is gone with the indirection.
+A named unit declared next to its only use keeps both: the name says what the block does, and the position keeps it in view.
+A function passed inline to a call nests its body inside that call; past a few lines, its name says more than the call it is handed to.
