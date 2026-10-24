@@ -2,12 +2,14 @@
 
 set -euo pipefail
 
-repo=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
-queue_limit=200
-numbers=$(gh search prs --review-requested=@me --state=open --draft=false --repo "$repo" --sort created --order asc --limit "$queue_limit" --json number --jq '.[].number')
+export GH_PAGER=cat GH_PROMPT_DISABLED=1 GH_SPINNER_DISABLED=1 GH_NO_UPDATE_NOTIFIER=1
 
-# --review-requested=@me also matches requests to teams I belong to
+# review-requested:@me also matches requests to teams I belong to
 me=$(gh api user --jq .login)
-for number in $numbers; do
-  gh pr view "$number" --json headRefName,reviewRequests --jq "select(any(.reviewRequests[]; .login == \"$me\")) | .headRefName"
-done
+queue_limit=200
+gh pr list \
+  --search "review-requested:@me draft:false sort:created-asc" \
+  --state open \
+  --limit "$queue_limit" \
+  --json headRefName,reviewRequests \
+  --jq ".[] | select(any(.reviewRequests[]; .login == \"$me\")) | .headRefName"
