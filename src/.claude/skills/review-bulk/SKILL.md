@@ -21,13 +21,14 @@ Each reviewed PR gets one local commit on its branch, on top of the PR head, nev
 
 ## Plan per branch
 
-After `git fetch origin <branch>`, the local branch decides the plan:
+After `git fetch origin`, the first that holds decides the plan:
 
-1. none: `review`; the subagent's `/review` checks it out
-2. at or behind `origin/<branch>`, no `review.md` commit on top: `review`; the subagent's `/review` fast-forwards it
-3. a `review.md` commit on top of `origin/<branch>`: `skip`, already reviewed
-4. a `review.md` commit on top of anything else, the PR moved since: `review`, after `git reset --hard origin/<branch>`
-5. any other local-only commit: `failed`, with the reason; the branch is untouched
+1. `origin/<branch>` does not exist, the PR branch is gone: `failed`, with the reason
+2. no local branch: `review`; the subagent's `/review` checks it out
+3. at or behind `origin/<branch>`, no `review.md` commit on top: `review`; the subagent's `/review` fast-forwards it
+4. a `review.md` commit on top of `origin/<branch>`: `skip`, already reviewed
+5. a `review.md` commit on top of anything else, the PR moved since: `review`, after `git reset --hard origin/<branch>`
+6. any other local-only commit: `failed`, with the reason; the branch is untouched
    NOTE: `review-bulk` never destroys what it did not create.
 
 ## Reviewing one branch
@@ -48,10 +49,12 @@ One line per branch in queue order, `<branch>: reviewed|skipped|failed`, followe
 
 ## Process
 
-1. Stop and say so, touching nothing, if `git status --porcelain` prints anything; untracked files count as dirty.
-2. Note the starting branch, `git branch --show-current`.
-3. Run the queue script, fetch each branch and decide its plan.
-4. Print the queue, one line per branch with its plan, before the first subagent runs.
-5. Review each branch whose plan is `review`, one at a time, in queue order.
-6. Check out the starting branch.
-7. Print the report.
+1. Stop and say so, touching nothing, if any of these holds:
+   - `git status --porcelain` prints anything; untracked files count as dirty
+   - `git check-ignore -q review.md` succeeds; `review.md` could never show up as untracked
+   - `git symbolic-ref -q refs/remotes/origin/HEAD` fails; `git remote set-head origin -a` fixes it
+2. Run the queue script, `git fetch origin`, and decide each branch's plan.
+3. Print the queue, one line per branch with its plan, before the first subagent runs.
+4. Review each branch whose plan is `review`, one at a time, in queue order.
+5. Check out the default branch, the one `origin/HEAD` points at.
+6. Print the report.
