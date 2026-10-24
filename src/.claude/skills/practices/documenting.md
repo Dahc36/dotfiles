@@ -4,7 +4,8 @@ name: documenting
 
 # Documenting
 
-Documentation should be easy to read both as a formatted .md and when reading the code.
+We document for people.
+The objective is that people read what we document.
 
 ## People don't want to read
 
