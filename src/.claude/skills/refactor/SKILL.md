@@ -28,8 +28,8 @@ Do not refactor unrelated code, unless required by changes within the scope.
 
 1. Determine the scope and read the code in it, with enough surrounding context to understand it.
 2. Edit the code directly.
-3. Find the project's existing checks (tests, type checker, linter) from its config (e.g. `package.json`, `Makefile`, `pyproject.toml`, CI config) and run the relevant ones. Get them passing. That may mean fixing the refactor, or updating tests that no longer fit the new code.
+3. Find the project's existing checks (tests, type checker, linter) from its config (e.g. `package.json`, `Makefile`, `pyproject.toml`, CI config). Run only the ones the change can make fail. Get them passing. That may mean fixing the refactor, or updating tests that no longer fit the new code.
 4. Summarize:
    - each change made, with file location and the practice that motivated it
    - any changes to interfaces or behavior, and any tests changed or removed
-   - the checks run and their results (or that none were found)
+   - the checks run and their results, or that none were found, or that none covers the scope
