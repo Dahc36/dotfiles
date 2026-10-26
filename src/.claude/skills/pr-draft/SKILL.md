@@ -36,10 +36,10 @@ The title names the change in one line, in the shape the convention gives it.
 Whatever sections the convention gives, they carry:
 
 - Why this change exists, not the work it is part of: the plan a branch serves belongs to the PR that lands it. The sources are the commits, the branch name and what they link to, all read in full; a file in the working tree they do not link to is not one, whatever it says. The diff shows what, not why. When the why stays unclear, write the best inference and end it with `(inferred)`.
-- What the diff does, in whatever order explains it best, which is seldom diff order.
-- How a reviewer verifies it. When the diff adds or changes tests that cover the change, name them and say CI runs them. Otherwise write what a reviewer should do, ending with `(inferred)`.
+- What the diff does, as the summary a reviewer reads before the diff, not a restatement of it: the few moves the rest of the change follows from, in whatever order explains them best, which is seldom diff order. A file is named only when the reviewer has to find it.
+- How a reviewer verifies it. When the diff adds or changes tests that cover the change, say which behaviour they cover and that CI runs them; the files are in the diff. Otherwise write what a reviewer should do, ending with `(inferred)`.
 
-The body names no problem with the change and gives no opinion on it: it describes, so that a reviewer reads the change knowing what to expect.
+The body names no problem with the change and gives no opinion on it: it describes, so that a reviewer reads the change knowing what to expect. It is short enough to be read whole before the diff is opened.
 
 It is always in English. Identifiers and business terms that already exist in another language stay as they are, never translated.
 
