@@ -9,48 +9,56 @@ Draft the PR for the current branch into `PR.md`, then offer to open it as a dra
 
 ## The change
 
-The base is `$ARGUMENTS`; when empty, the default branch, the one `origin/HEAD` points at. The change is the commits of the current branch over `origin/<base>`:
+The base branch is `$ARGUMENTS`; when empty, the default branch, the one `origin/HEAD` points at.
+The change is the commits of the current branch over `origin/<base>`:
 
 - the commits: `git log origin/<base>..HEAD`
 - the diff: `git diff origin/<base>...HEAD`
 
 Uncommitted changes are ignored.
-
 Read every changed file in full, plus callers and callees when needed to understand the change.
 
 ## The conventions
 
 The draft follows the repo's own conventions, found in this order; the first that exists wins:
 
-1. A PR template, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/pull_request_template.md`, any file in `.github/PULL_REQUEST_TEMPLATE/`, `docs/pull_request_template.md`: the body's sections, in its order, every one filled.
+1. Any PR template you can find.
 2. `CONTRIBUTING.md`, where it says how PRs are titled or written.
-3. The last merged PRs, `gh pr list --state merged -L 15 --json title,body`: the title shape, and the sections their bodies share.
-4. None of those: the shape that best explains this change.
+3. None of those: the shape that best explains this change.
 
 ## PR.md
 
-Written at the root of the project, never committed, and `.gitignore` is not touched. The first line is `# <title>`; the rest is the body exactly as it will be posted.
+Written at the root of the project, never committed, and `.gitignore` is not touched.
+The first line is `# <title>`, the rest is the body exactly as it will be posted.
 
-The title names the change in one line, in the shape the convention gives it.
+The title names the change in one line, in the shortest way possible. The less text the better.
 
-Whatever sections the convention gives, they carry:
+Whatever sections the convention gives, they should carry:
 
-- Why this change in particular exists, with the minimum context to understand the change itself, nothing more.
+- Why this change exists.
+  - With the minimum context to understand the change itself, nothing more.
   - When the why is unclear, write the best inference and start it with `(INFERRED)`.
-- What changes were made, as the summary a reviewer reads before the diff, not a restatement of it: the few moves the rest of the change follows from, one line each, in whatever order explains them best, which is seldom diff order. The diff carries the detail.
-- When tests cover the changes, a brief mention is enough, no need to enumerate test coverage
-- How the change is verified. If any hand check is needed, or a smoke test or a whole flow, it should be detailed as numbered steps.
+- What changes were made, as a summary of the core decisions the rest of the changes follow from.
+  - A reviewer reads this before the diff, there's no need to enumerate every change in the diff.
+  - One line each, in whatever order explains them best, which is seldom diff order.
+- When tests cover changes, a mention of that fact is enough, no need to enumerate each automated test.
+- How the change is verified.
+  - If any manual check is needed, or a smoke test or a whole flow, it should be detailed as numbered steps.
 
 It is always in English. Identifiers and business terms that already exist in another language stay as they are, never translated.
 
 ## The go-ahead
 
-Only after I say to open it:
+Only after I say to open the PR:
 
-1. Push the branch when `origin/<branch>` does not exist or is behind: `git push -u origin <branch>`. Never force push; if the push is rejected, say so and stop.
-2. Read the title from the first line of `PR.md` and the body from the rest, so that my edits are what gets posted, then open the PR with `gh pr create --draft --base <base> --title <title> --body-file <body>`. Nothing else is set: no reviewers, labels, assignees or project.
-3. Remove `PR.md`.
-4. End with the PR URL.
+1. Push the branch when `origin/<branch>` does not exist or is behind: `git push -u origin <branch>`.
+   1. Never force push; if the push is rejected, say so and stop.
+2. Read the title from the first line of `PR.md`.
+3. Read the body from the rest, so that my edits are what gets posted.
+4. Open the PR with `gh pr create --draft --base <base> --title <title> --body-file <body>`.
+   1. Nothing else is set: no reviewers, labels, assignees or project.
+5. Remove `PR.md`.
+6. End with the PR URL.
 
 ## Process
 
@@ -65,4 +73,5 @@ Only after I say to open it:
 3. Find the conventions.
 4. Write `PR.md`, following only the conventions.
 5. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`) and apply it to `PR.md`.
-6. End with one line: whether no convention was found, how many sections were inferred, and that `PR.md` is at the root. Then offer to open the draft PR, and wait. I may have made changes directly to PR.md, open the draft with those included.
+6. End by offering to open the draft PR, and wait.
+   1. I may have made changes directly to PR.md, open the draft with those included.
