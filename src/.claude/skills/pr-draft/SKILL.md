@@ -35,7 +35,7 @@ The title names the change in one line, in the shape the convention gives it.
 
 Whatever sections the convention gives, they carry:
 
-- Why the PR exists, only from what the commits, the branch name and what they link to say, all read in full. The diff shows what, not why. When the why stays unclear, write the best inference and end it with `(inferred)`.
+- Why this change exists, not the work it is part of: the plan a branch serves belongs to the PR that lands it. The sources are the commits, the branch name and what they link to, all read in full; a file in the working tree they do not link to is not one, whatever it says. The diff shows what, not why. When the why stays unclear, write the best inference and end it with `(inferred)`.
 - What the diff does, in whatever order explains it best, which is seldom diff order.
 - How a reviewer verifies it. When the diff adds or changes tests that cover the change, name them and say CI runs them. Otherwise write what a reviewer should do, ending with `(inferred)`.
 
