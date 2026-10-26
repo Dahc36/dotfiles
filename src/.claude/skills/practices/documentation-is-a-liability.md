@@ -18,3 +18,9 @@ Documentation says why, not what.
 
 Documentation should be easy to read both as a formatted .md and when reading the code.
 The same sentence is not more justified in a README than next to the code.
+
+## Documentation describes the contract, not the mechanism
+
+How the code achieves something is already in the code, and it changes without the prose noticing.
+Documentation says what the reader can rely on, and when to pick one thing over another.
+A sentence that would go stale after a refactor that changes no behavior is describing mechanism.
