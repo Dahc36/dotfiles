@@ -37,10 +37,9 @@ Whatever sections the convention gives, they carry:
 
 - Why this change in particular exists, with the minimum context to understand the change itself, nothing more.
   - When the why is unclear, write the best inference and start it with `(INFERRED)`.
-- What the diff does, as the summary a reviewer reads before the diff, not a restatement of it: the few moves the rest of the change follows from, one line each, in whatever order explains them best, which is seldom diff order. The diff carries the detail. A file is named only when the reviewer has to find it.
-- How a reviewer verifies it. When the tests in the diff cover the change, `CI covers these changes` is the whole section. Otherwise, the hand check the change needs, a smoke test or a whole flow, as numbered steps and no more than needed, starting with `(INFERRED)`.
-
-The body names no problem with the change and gives no opinion on it: it describes, so that a reviewer reads the change knowing what to expect. It is short enough to be read whole before the diff is opened.
+- What changes were made, as the summary a reviewer reads before the diff, not a restatement of it: the few moves the rest of the change follows from, one line each, in whatever order explains them best, which is seldom diff order. The diff carries the detail.
+- When tests cover the changes, a brief mention is enough, no need to enumerate test coverage
+- How the change is verified. If any hand check is needed, or a smoke test or a whole flow, it should be detailed as numbered steps.
 
 It is always in English. Identifiers and business terms that already exist in another language stay as they are, never translated.
 
