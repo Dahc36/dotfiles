@@ -65,4 +65,4 @@ Only after I say to open it:
 3. Find the conventions.
 4. Write `PR.md`, following only the conventions.
 5. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`) and apply it to `PR.md`.
-6. End with one line: whether no convention was found, how many sections were inferred, and that `PR.md` is at the root. Then offer to open the draft PR, and wait. Nothing else: `PR.md` is read, not retold.
+6. End with one line: whether no convention was found, how many sections were inferred, and that `PR.md` is at the root. Then offer to open the draft PR, and wait. I may have made changes directly to PR.md, open the draft with those included.

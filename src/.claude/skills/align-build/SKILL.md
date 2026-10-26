@@ -26,7 +26,8 @@ Implement one commit's worth of the work agreed in `alignment.md`, so that each 
    - Remove every fact and decision that only concerned the work now done. The code is the record of it from here on.
    - Keep facts and decisions that still matter for the remaining work, reworded if the done work changes how they read.
    - Add nothing about progress: no done sections, checkmarks, changelog or notes about this step. The file must read as if the done work had never been pending.
-   - If nothing pending remains, delete `alignment.md` and say so.
+   - Follow-ups listed for other PRs or branches are pending work too. They stay, with the facts they need, until done or moved somewhere else.
+   - Delete `alignment.md` only when nothing pending remains, follow-ups included, and say so.
 8. Summarize:
    - the step done, with file locations
    - the checks run and their results, or that none were found
