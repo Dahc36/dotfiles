@@ -9,7 +9,7 @@ Draft the PR for the current branch into `PR.md`, then offer to open it as a dra
 
 ## The change
 
-The base is `$ARGUMENTS`, or the default branch, the one `origin/HEAD` points at, when empty. The change is the commits of the current branch over `origin/<base>`:
+The base is `$ARGUMENTS`; when empty, the default branch, the one `origin/HEAD` points at. The change is the commits of the current branch over `origin/<base>`:
 
 - the commits: `git log origin/<base>..HEAD`
 - the diff: `git diff origin/<base>...HEAD`
@@ -25,7 +25,7 @@ The draft follows the repo's own conventions, found in this order; the first tha
 1. A PR template, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/pull_request_template.md`, any file in `.github/PULL_REQUEST_TEMPLATE/`, `docs/pull_request_template.md`: the body's sections, in its order, every one filled.
 2. `CONTRIBUTING.md`, where it says how PRs are titled or written.
 3. The last merged PRs, `gh pr list --state merged -L 15 --json title,body`: the title shape, and the sections their bodies share.
-4. None of those: the shape that best explains this change, said so in the closing line.
+4. None of those: the shape that best explains this change.
 
 ## PR.md
 
@@ -35,9 +35,10 @@ The title names the change in one line, in the shape the convention gives it.
 
 Whatever sections the convention gives, they carry:
 
-- Why this change exists, not the work it is part of: the plan a branch serves belongs to the PR that lands it. The sources are the commits, the branch name, what they link to, and a document in the working tree that records what was agreed about the work, all read in full; any other file in the working tree is not one. Such a document covers the whole plan: take the part that explains this change and boil it down to the few sentences a reviewer needs. The diff shows what, not why. When the why stays unclear, write the best inference and end it with `(inferred)`.
+- Why this change in particular exists, with the minimum context to understand the change itself, nothing more.
+  - When the why is unclear, write the best inference and start it with `(INFERRED)`.
 - What the diff does, as the summary a reviewer reads before the diff, not a restatement of it: the few moves the rest of the change follows from, one line each, in whatever order explains them best, which is seldom diff order. The diff carries the detail. A file is named only when the reviewer has to find it.
-- How a reviewer verifies it. When the tests in the diff cover the change, `CI covers these changes` is the whole section. Otherwise, the hand check the change needs, a smoke test or a whole flow, as numbered steps and no more than needed, ending with `(inferred)`.
+- How a reviewer verifies it. When the tests in the diff cover the change, `CI covers these changes` is the whole section. Otherwise, the hand check the change needs, a smoke test or a whole flow, as numbered steps and no more than needed, starting with `(INFERRED)`.
 
 The body names no problem with the change and gives no opinion on it: it describes, so that a reviewer reads the change knowing what to expect. It is short enough to be read whole before the diff is opened.
 
@@ -61,8 +62,8 @@ Only after I say to open it:
    - `git log origin/<base>..HEAD` prints nothing
    - `gh pr view` finds an open PR for the branch
    - a `PR.md` exists at the root of the project, tracked or not
-2. Read the commits, the diff, what they link to, and any document in the working tree that records what was agreed about the work.
+2. Read the change and the sources of its why.
 3. Find the conventions.
 4. Write `PR.md`, following only the conventions.
 5. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`) and apply it to `PR.md`.
-6. End with one line: whether no convention was found, how many sections end with `(inferred)`, and that `PR.md` is at the root. Then offer to open the draft PR, and wait.
+6. End with one line: whether no convention was found, how many sections were inferred, and that `PR.md` is at the root. Then offer to open the draft PR, and wait. Nothing else: `PR.md` is read, not retold.
