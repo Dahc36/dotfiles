@@ -46,4 +46,4 @@ The proposal is an `Edit` call on the `SKILL.md`, on its target when it is a sym
 2. Restate the diagnosis in one line and wait for my confirmation.
    1. NOTE: a cause in a practice, or an outcome no wording would have prevented: say so and stop.
 3. Propose the change as an `Edit` on the `SKILL.md`, written as `documenting.md` would have it, with the reasoning and the replay. On my no, revert it with git before the next proposal; iterate until I agree.
-4. End with one line: the file and lines changed, or why none, and the commit message in the repo's convention. Once I agree to the message, commit the `SKILL.md` alone with it.
+4. End with one line: the file and lines changed, or why none, and the commit message in the repo's convention. Once I agree to the message, commit the `SKILL.md` alone with it, as the whole message: no co-author or generated-by trailer.
