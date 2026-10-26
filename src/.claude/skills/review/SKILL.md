@@ -77,9 +77,9 @@ When the fix is a drop-in replacement of the anchored lines, give it in a ```sug
 1. Stop and say so, touching nothing, if any of these holds:
    - there is no argument
    - `gh pr view $ARGUMENTS` finds no PR, or the PR is not open
-   - a `review.md` already exists at the root of the project
    - `git status --porcelain` prints anything; untracked files count as dirty
 2. Check out the PR at its latest head: `gh pr checkout <number>`, then `git pull --ff-only`. If the fast-forward fails, say so and stop; never merge or reset.
+   Then, if a `review.md` exists at the root of the project, tracked or not, say so and stop.
    NOTE: stay on the PR branch when done.
 3. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`), then the context the author shared: the title, the body, and whatever the body links to (issues, docs, Slack threads, other PRs, a file or line the author points at). Nothing else of the PR's code is read yet. Do not read existing review comments or threads: duplicates are fine, and reading them biases the review toward what others already flagged.
 4. Write `review.md` with the title and `Intent`, before reading any code, so that `Intent` cannot come from the code.
