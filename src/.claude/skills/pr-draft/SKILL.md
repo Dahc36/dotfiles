@@ -38,9 +38,11 @@ Whatever sections the convention gives, they should carry:
 - Why this change exists.
   - With the minimum context to understand the change itself, nothing more.
   - When the why is unclear, write the best inference and start it with `(INFERRED)`.
-- What changes were made, as a summary of the core decisions the rest of the changes follow from.
-  - A reviewer reads this before the diff, there's no need to enumerate every change in the diff.
-  - One line each, in whatever order explains them best, which is seldom diff order.
+- What changes were made, as the core decisions the rest of the changes follow from.
+  - A decision is a choice the diff does not explain by itself; the diff already shows what changed in each file.
+  - One flat line per decision, carrying the decision and the reason for it.
+  - The same decision applied in several files is one line; a file is named only when the decision concerns it alone.
+  - In whatever order explains them best, which is seldom diff order.
 - When tests cover changes, a mention of that fact is enough, no need to enumerate each automated test.
 - How the change is verified.
   - If any manual check is needed, or a smoke test or a whole flow, it should be detailed as numbered steps.
