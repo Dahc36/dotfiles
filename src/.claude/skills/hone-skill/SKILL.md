@@ -7,8 +7,9 @@ disable-model-invocation: true
 
 Improve one of my skills from an outcome I did not want, so that it does not happen again.
 
-My skills are the `SKILL.md` files under `~/.claude/skills/<name>/`.
-Nothing is written but the `SKILL.md` being honed, and nothing else is committed.
+My skills are the `SKILL.md` files under `~/.claude/skills/<name>/` (though they might be symlinks).
+Only two things are written: the session's outcome, redone as agreed, and the `SKILL.md` being honed.
+Only the `SKILL.md` is committed.
 
 Questions come one at a time, each with your recommended answer.
 Facts you can look up, look up yourself.
@@ -34,6 +35,8 @@ Ask me relentlessly about the issue, until we have shared understanding of:
 The change lands in the skill I invoked or in one it delegated to, whichever holds the cause.
 If no wording would have prevented the issue, say so and stop.
 
+When the session holds the outcome, redo it as the "right" one we agreed on.
+
 ## The change
 
 Propose a change that guides the skill towards my desired outcome:
@@ -48,12 +51,13 @@ Iterate with me to confirm that the change reflects my intentions.
    1. As soon as the skill is known, read its `SKILL.md` and those of every skill it delegates to.
 2. Interrogate me to understand what went wrong.
 3. Interrogate me to understand what "right" looks like.
-4. Propose a change to the `SKILL.md`.
+4. Redo the session's outcome as the "right" one, when there is one.
+5. Propose a change to the `SKILL.md`.
    1. Come up with a proposal.
    2. Apply the principles stated in `documenting.md`.
    3. Ask for confirmation on the change
       1. If I'm not on board, go back to the corresponding step to correct the issue and keep going with the process
       2. Make the change
-5. End by offering to commit the change.
+6. End by offering to commit the change.
    1. Propose a commit message, it should be as short as possible.
    2. Once I agree to the message, commit the `SKILL.md` alone with it, as the whole message: no co-author or generated-by trailer.
