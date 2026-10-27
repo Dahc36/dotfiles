@@ -46,6 +46,8 @@ Whatever sections the convention gives, they should carry:
 - When tests cover changes, a mention of that fact is enough, no need to enumerate each automated test.
 - How the change is verified.
   - If any manual check is needed, or a smoke test or a whole flow, it should be detailed as numbered steps.
+  - A step names the place to go and the control to act on: the story, screen or command, then the button or field.
+  - Those names are looked up in the repo, so the reader finds them as written: the story title, the screen route, the button label.
 
 It is always in English. Identifiers and business terms that already exist in another language stay as they are, never translated.
 
