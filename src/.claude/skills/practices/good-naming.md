@@ -22,3 +22,9 @@ A home-made label for a known pattern sends every reader into the implementation
 
 A name that says how something works goes stale when the implementation changes and says nothing the caller can rely on.
 Name the effect the caller observes and let the implementation stay inside.
+
+## A file name is a name
+
+A file is named in every listing and every import, by someone who will not open it.
+Its name says what the file defines, in the same words the code inside uses.
+A name the ecosystem reserves for a role promises only that role; code that does more hides behind it.
