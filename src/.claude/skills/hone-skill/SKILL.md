@@ -7,43 +7,53 @@ disable-model-invocation: true
 
 Improve one of my skills from an outcome I did not want, so that it does not happen again.
 
-My skills are the `SKILL.md` files under `~/.claude/skills/<name>/`. Nothing is written but the `SKILL.md` being honed, and nothing else is committed.
+My skills are the `SKILL.md` files under `~/.claude/skills/<name>/`.
+Nothing is written but the `SKILL.md` being honed, and nothing else is committed.
 
-Questions come one at a time, each with your recommended answer. Facts you can look up (the skill, the skills it delegates to, the current session), look up; what you ask me is only what is in my head.
+Questions come one at a time, each with your recommended answer.
+Facts you can look up, look up yourself.
+Things you need my input with, ask me.
 
 ## The target
 
-`$ARGUMENTS` may name a skill, describe the undesired outcome, or both. The current session, when there is one, is evidence of what the skill did.
+`$ARGUMENTS` may name a skill.
+The current session, when there is one, is evidence of what the skill did.
 
 - A skill named only by the session: confirm it with me in one line.
 - No candidate at all: ask which skill.
-- No outcome described: ask what happened and what I expected instead.
 
 Stop, touching nothing, when the skill is not in `~/.claude/skills/`.
 
 ## The diagnosis
 
-One line: the instruction that was followed or was missing, why it produced the outcome, and the behaviour I wanted. I confirm it before anything is proposed.
+Ask me relentlessly about the issue, until we have shared understanding of:
 
-The change lands in the skill I invoked or in one it delegated to, whichever holds the cause. Two causes end with no change, said so and stop:
+- what went wrong
+- what a "right" outcome would look like
 
-- an outcome no wording would have prevented
+The change lands in the skill I invoked or in one it delegated to, whichever holds the cause.
+If no wording would have prevented the issue, say so and stop.
 
 ## The change
 
-The smallest change that removes the cause:
+Propose a change that guides the skill towards my desired outcome:
 
-- it fixes the cause, not the symptom: say what to do, and why when it is not obvious, rather than ban the one case that happened
-- it goes where that behaviour is already described: a guard with the guards, a step in `## Process`, a definition in its section; never appended at the end
-- it keeps the skill's shape and voice; a changed instruction is rewritten, never annotated
-- it is written following `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`)
+- it fixes the cause, not the symptom: it should describe what to do, rather than ban bad outcomes
 
-The proposal is an `Edit` call on the `SKILL.md`, on its target when it is a symlink, never a shell command, so that the change is shown as the diff that tool renders. Where the edit asks for permission, rejecting it is my no; where it lands first, a no from me reverts it with git. The same turn carries the reasoning and a replay in chat: the moment the skill went wrong, from the transcript or my description, walked through under the new wording until it reaches the behaviour I wanted, plus any other situation the change plausibly alters. Nothing is re-run; trying it again is mine.
+Iterate with me to confirm that the change reflects my intentions.
 
 ## Process
 
-1. Pin down the skill and the outcome, from `$ARGUMENTS` and the session. As soon as the skill is known, read its `SKILL.md` and those of every skill it delegates to, in full, before asking anything else.
-2. Restate the diagnosis in one line and wait for my confirmation.
-   1. NOTE: a cause in a practice, or an outcome no wording would have prevented: say so and stop.
-3. Propose the change as an `Edit` on the `SKILL.md`, written as `documenting.md` would have it, with the reasoning and the replay. On my no, revert it with git before the next proposal; iterate until I agree.
-4. End with one line: the file and lines changed, or why none, and the commit message in the repo's convention. Once I agree to the message, commit the `SKILL.md` alone with it, as the whole message: no co-author or generated-by trailer.
+1. Pin down the skill, from `$ARGUMENTS` and the session.
+   1. As soon as the skill is known, read its `SKILL.md` and those of every skill it delegates to.
+2. Interrogate me to understand what went wrong.
+3. Interrogate me to understand what "right" looks like.
+4. Propose a change to the `SKILL.md`.
+   1. Come up with a proposal.
+   2. Apply the principles stated in `documenting.md`.
+   3. Ask for confirmation on the change
+      1. If I'm not on board, go back to the corresponding step to correct the issue and keep going with the process
+      2. Make the change
+5. End by offering to commit the change.
+   1. Propose a commit message, it should be as short as possible.
+   2. Once I agree to the message, commit the `SKILL.md` alone with it, as the whole message: no co-author or generated-by trailer.
