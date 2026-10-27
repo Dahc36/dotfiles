@@ -12,6 +12,7 @@ Only two things are written: the session's outcome, redone as agreed, and the `S
 Only the `SKILL.md` is committed.
 
 Questions come one at a time, each with your recommended answer.
+What I need to see to answer goes inside the question, as the preview of each option; text outside the question goes unseen.
 Facts you can look up, look up yourself.
 Things you need my input with, ask me.
 
@@ -43,6 +44,7 @@ Propose a change that guides the skill towards my desired outcome:
 
 - it fixes the cause, not the symptom: it should describe what to do, rather than ban bad outcomes
 
+The proposal is shown as before and after: the current lines of the `SKILL.md`, then the lines that replace them.
 Iterate with me to confirm that the change reflects my intentions.
 
 ## Process
