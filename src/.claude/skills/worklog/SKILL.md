@@ -105,5 +105,5 @@ Both are one or two sentences, in English. Identifiers and business terms that a
 3. Group PRs that share a purpose, and sort.
 4. Work out each entry's last activity and value.
 5. Write `worklog.md`: `# Worklog <exact date range>`, e.g. `# Worklog Oct 15 – Oct 22`, a line with the count of PRs, then the entries.
-6. Read `documenting.md` from my principles (`~/.claude/skills/principles/documenting.md`) and apply it to `worklog.md`.
+6. Read every file printed by `aiprinciples prose` and apply them to `worklog.md`.
 7. End with one line: how many entries were written and that `worklog.md` is at the root, then offer to remove it. Remove it only when I say so.

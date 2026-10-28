@@ -8,7 +8,7 @@ Refactor code by applying my coding principles.
 
 ## Principles
 
-Read every `.md` file in `~/.claude/skills/principles/`. Each one describes a principle I want to follow and the reasoning behind it.
+Read every file printed by `aiprinciples code prose`. Each one describes a principle I want to follow and the reasoning behind it.
 
 These are broad guidelines, not rules.
 Apply them with nuance, in the context of the code being changed.

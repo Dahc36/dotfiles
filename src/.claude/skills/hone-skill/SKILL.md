@@ -56,7 +56,7 @@ Iterate with me to confirm that the change reflects my intentions.
 4. Redo the session's outcome as the "right" one, when there is one.
 5. Propose a change to the `SKILL.md`.
    1. Come up with a proposal.
-   2. Apply the principles stated in `documenting.md`.
+   2. Read every file printed by `aiprinciples prose` and apply them.
    3. Ask for confirmation on the change
       1. If I'm not on board, go back to the corresponding step to correct the issue and keep going with the process
       2. Make the change

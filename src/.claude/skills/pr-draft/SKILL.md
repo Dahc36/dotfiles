@@ -76,6 +76,6 @@ Only after I say to open the PR:
 2. Read the change and the sources of its why.
 3. Find the conventions.
 4. Write `PR.md`, following only the conventions.
-5. Read `documenting.md` from my principles (`~/.claude/skills/principles/documenting.md`) and apply it to `PR.md`.
+5. Read every file printed by `aiprinciples prose` and apply them to `PR.md`.
 6. End by offering to open the draft PR, and wait.
    1. I may have made changes directly to PR.md, open the draft with those included.
