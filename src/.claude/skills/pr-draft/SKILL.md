@@ -79,3 +79,4 @@ Only after I say to open the PR:
 5. Read every file printed by `aiprinciples prose` and apply them to `PR.md`.
 6. End by offering to open the draft PR, and wait.
    1. I may have made changes directly to PR.md, open the draft with those included.
+   2. Do not add an attribution line
