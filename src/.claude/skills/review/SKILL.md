@@ -3,6 +3,7 @@ name: review
 description: Review a PR for bugs and then for code quality against my principles, writing each finding into review.md for me to write the review from.
 argument-hint: '<PR number, URL or branch>'
 disable-model-invocation: true
+model: opus
 ---
 
 Review the PR `$ARGUMENTS` and write every finding into `review.md`, for me to write the GitHub review from.

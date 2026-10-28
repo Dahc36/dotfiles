@@ -2,6 +2,7 @@
 name: review-bulk
 description: Run /review on every open PR of this repo that requests my review directly, each in a fresh subagent, and commit each review.md locally on its PR branch.
 disable-model-invocation: true
+model: opus
 ---
 
 Review the PRs waiting on me in this repo, one at a time, each by a fresh subagent following `/review`, and commit each `review.md` locally on its PR branch, so that `/review-check` can read it and the next run skips it.
