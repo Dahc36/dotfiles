@@ -1,5 +1,6 @@
 ---
 name: code-is-a-liability
+tags: [code]
 ---
 
 # Code is a liability

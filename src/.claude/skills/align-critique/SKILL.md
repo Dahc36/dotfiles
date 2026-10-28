@@ -8,7 +8,7 @@ Pressure test the plan in `alignment.md` so that a poorly constructed idea does 
 
 `alignment.md` is the output of `/align`: a short list of facts and agreed decisions, at the root of the opened project. Takes no arguments.
 
-Nothing is built. The only files ever written are `critique.md` and `alignment.md`, both following my `documenting` practice.
+Nothing is built. The only files ever written are `critique.md` and `alignment.md`, both following my `documenting` principle.
 
 ## Problems
 
@@ -63,7 +63,7 @@ After 1 or 2 the problem is removed from `critique.md`.
 1. Stop and say so, touching nothing, if either holds:
    - there is no `alignment.md` at the root of the project
    - a `critique.md` already exists at the root of the project
-2. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`), then `alignment.md`, then whatever code and docs the plan concerns, enough to tell its facts from its assumptions.
+2. Read `documenting.md` from my principles (`~/.claude/skills/principles/documenting.md`), then `alignment.md`, then whatever code and docs the plan concerns, enough to tell its facts from its assumptions.
 3. Write the problems to `critique.md`.
 4. Scrutinize every problem, then rewrite `critique.md` with only the survivors, renumbered, each with its evidence and consequence. If none survive, say so, delete `critique.md` and stop.
 5. Apply `documenting.md` to `critique.md`.

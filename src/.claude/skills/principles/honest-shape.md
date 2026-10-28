@@ -1,5 +1,6 @@
 ---
 name: honest-shape
+tags: [code]
 ---
 
 # Honest shape

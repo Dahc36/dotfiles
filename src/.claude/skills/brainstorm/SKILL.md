@@ -19,7 +19,7 @@ Nothing is modified; the only file written is `idea.md`.
 
 Written at the root of the opened project, never committed, and `.gitignore` is not touched.
 It is our shared state, updated after every exchange that changes something.
-Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`) before the first write and follow it on every update.
+Read `documenting.md` from my principles (`~/.claude/skills/principles/documenting.md`) before the first write and follow it on every update.
 
 An existing `idea.md` is resumed: read it, say in one line where it stands, and continue in its current stage.
 One that already has `## Idea` is complete: say so and ask whether to reopen it.

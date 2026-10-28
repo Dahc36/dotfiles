@@ -1,5 +1,6 @@
 ---
 name: early-returns
+tags: [code]
 ---
 
 # Early returns

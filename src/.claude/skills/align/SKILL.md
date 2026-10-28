@@ -11,6 +11,6 @@ If a _fact_ can be found by exploring the environment (filesystem, tools, etc.),
 
 alignment.md: Build a short list of facts and the agreed decisions so both sides are looking at the same thing.
 `alignment.md` should always be created at the root of the opened project. If there is already an existing `alignment.md`, say so and stop.
-Before writing it, read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`) and follow it, on every write and update.
+Before writing it, read `documenting.md` from my principles (`~/.claude/skills/principles/documenting.md`) and follow it, on every write and update.
 Do not act on it.
 Keep aligning until I confirm we have reached a shared understanding.

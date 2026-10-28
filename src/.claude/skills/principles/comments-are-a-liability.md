@@ -1,5 +1,6 @@
 ---
 name: comments-are-a-liability
+tags: [code]
 ---
 
 # Comments are a liability

@@ -1,5 +1,6 @@
 ---
 name: magic-hides-complexity
+tags: [code]
 ---
 
 # Magic hides complexity

@@ -1,5 +1,6 @@
 ---
 name: documentation-is-a-liability
+tags: [code]
 ---
 
 # Documentation is a liability

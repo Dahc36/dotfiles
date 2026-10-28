@@ -1,6 +1,6 @@
 ---
 name: review
-description: Review a PR for bugs and then for code quality against my practices, writing each finding into review.md for me to write the review from.
+description: Review a PR for bugs and then for code quality against my principles, writing each finding into review.md for me to write the review from.
 argument-hint: '<PR number, URL or branch>'
 disable-model-invocation: true
 ---
@@ -33,7 +33,7 @@ Two kinds, found in two separate passes, in this order:
       4. Cite one failure as evidence and enumerate no others, even when several exist: fixing CI surfaces them all.
 2. Quality: the code as-is will be hard to understand, follow or maintain. This prevents bad code; it does not improve fine code. A finding exists only when the harm is shown as work someone will have to do (a reader jumping through files, holding several conditions in their head, knowing an unwritten convention; a maintainer touching several places, updating a parallel list) and the concrete better version is given.
    1. Only on lines the PR touched.
-   2. The practices, every `.md` file in `~/.claude/skills/practices/`, and the repo's own established conventions name the why when one fits. They are never the limit: a harm with no practice behind it is a finding, a practice violation with no shown harm is not. Never apply one mechanically.
+   2. The principles, every `.md` file in `~/.claude/skills/principles/`, and the repo's own established conventions name the why when one fits. They are never the limit: a harm with no principle behind it is a finding, a principle violation with no shown harm is not. Never apply one mechanically.
 
 ## review.md
 
@@ -61,14 +61,14 @@ Assume I have read the summary and nothing else of the PR, and that I have not m
 
 The location is always a line the PR touched, even when the file has untouched lines GitHub would accept a comment on. When several touched lines are involved, the anchor is the line whose logic is wrong, not a line that sets up the situation. When the finding lives on an untouched line, in a touched file or not, anchor it to the touched line that caused it (the deleted token, the renamed prop, the changed type) and name the real file and line in the body. A fix given for another location goes in a regular fenced block, never a ```suggestion block, since it would not apply at the anchor.
 
-The summary and the bodies follow my `documenting` practice.
+The summary and the bodies follow my `documenting` principle.
 They are always in English. Identifiers and business terms that already exist in another language stay as they are, never translated.
 
 Every claim that code can prove gets a GitHub permalink, `https://github.com/<owner>/<repo>/blob/<sha>/<path>#L<n>` or `#L<a>-L<b>`. The sha is the PR head for code on the branch and the merge base, `git merge-base origin/<base> HEAD`, for code the PR removed. The links go in a `Sources:` list at the end of the finding, one bullet per claim with a few words naming what the line shows, never inline in the prose. A finding whose claims are all on the anchored lines, or in the same file, has no list.
 
 Anything worth lifting into the review, wherever it appears (an example of the issue, how the change affects existing behavior, the evidence, the fix, a link), is written so that it can be pasted into GitHub as is.
 
-When the fix is a drop-in replacement of the anchored lines, give it in a ```suggestion block, so that once pasted it applies in one click. When it is not a drop-in, give the shape of it in a regular fenced block with the language. Code in either follows my coding practices.
+When the fix is a drop-in replacement of the anchored lines, give it in a ```suggestion block, so that once pasted it applies in one click. When it is not a drop-in, give the shape of it in a regular fenced block with the language. Code in either follows my coding principles.
 
 `Unsettled`, under a `## Unsettled` header after the last finding, is a list with one line per suspicion that could not be made checkable: the suspicion and why. It is omitted when there is none, and `review-check` ignores it.
 
@@ -81,12 +81,12 @@ When the fix is a drop-in replacement of the anchored lines, give it in a ```sug
 2. Check out the PR at its latest head: `gh pr checkout <number>`, then `git pull --ff-only`. If the fast-forward fails, say so and stop; never merge or reset.
    Then, if a `review.md` exists at the root of the project, tracked or not, say so and stop.
    NOTE: stay on the PR branch when done.
-3. Read `documenting.md` from my practices (`~/.claude/skills/practices/documenting.md`), then the context the author shared: the title, the body, and whatever the body links to (issues, docs, Slack threads, other PRs, a file or line the author points at). Nothing else of the PR's code is read yet. Do not read existing review comments or threads: duplicates are fine, and reading them biases the review toward what others already flagged.
+3. Read `documenting.md` from my principles (`~/.claude/skills/principles/documenting.md`), then the context the author shared: the title, the body, and whatever the body links to (issues, docs, Slack threads, other PRs, a file or line the author points at). Nothing else of the PR's code is read yet. Do not read existing review comments or threads: duplicates are fine, and reading them biases the review toward what others already flagged.
 4. Write `review.md` with the title and `Intent`, before reading any code, so that `Intent` cannot come from the code.
 5. Read the change. Fetch the PR's base branch and take it as `git diff origin/<base>...HEAD`. Read every changed file in full, plus callers and callees when needed to understand it.
 6. Write `Implementation`.
 7. Bug pass.
-8. Quality pass. Read every other `.md` file in `~/.claude/skills/practices/`, then review the touched lines against them and the repo's conventions.
+8. Quality pass. Read every other `.md` file in `~/.claude/skills/principles/`, then review the touched lines against them and the repo's conventions.
 9. Write the findings and the `Unsettled` list.
 10. Apply `documenting.md` to `review.md`.
 11. Check that `git status --porcelain` prints only `review.md`; remove whatever an experiment left behind.

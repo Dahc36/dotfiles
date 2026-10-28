@@ -1,5 +1,6 @@
 ---
 name: good-naming
+tags: [code, writing]
 ---
 
 # Good naming

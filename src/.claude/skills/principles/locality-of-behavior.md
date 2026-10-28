@@ -1,5 +1,6 @@
 ---
 name: locality-of-behavior
+tags: [code]
 ---
 
 # Locality of behavior

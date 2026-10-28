@@ -1,5 +1,6 @@
 ---
 name: documenting
+tags: [writing]
 ---
 
 # Documenting

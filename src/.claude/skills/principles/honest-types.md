@@ -1,5 +1,6 @@
 ---
 name: honest-types
+tags: [code]
 ---
 
 # Honest types
