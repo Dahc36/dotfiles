@@ -4,6 +4,7 @@ set -euo pipefail
 
 test_suites=(
   "add"
+  "aiprinciples"
   "diff"
   "link"
   "pull"

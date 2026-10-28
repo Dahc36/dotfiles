@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+principles_dir=$(cd "${AIPRINCIPLES_DIR:-$HOME/.claude/skills/principles}" && pwd)
+
+if [[ "${1:-}" == --dir ]]; then
+  echo "$principles_dir"
+  exit 0
+fi
+
+tags_of() {
+  local file="$1"
+  local line
+  line=$(grep -m1 '^tags: \[.*\]$' "$file") || {
+    echo "$file has no tags: [...] line" >&2
+    exit 1
+  }
+  local tags=${line#tags: \[}
+  tags=${tags%\]}
+  echo "${tags//,/ }"
+}
+
+carries_any() {
+  local tags="$1"
+  shift
+  local tag wanted
+  for tag in $tags; do
+    for wanted in "$@"; do
+      if [[ "$tag" == "$wanted" ]]; then
+        return 0
+      fi
+    done
+  done
+  return 1
+}
+
+found=false
+for file in "$principles_dir"/*.md; do
+  tags=$(tags_of "$file")
+  if (( $# == 0 )) || carries_any "$tags" "$@"; then
+    echo "$file"
+    found=true
+  fi
+done
+
+if [[ "$found" == false ]]; then
+  exit 1
+fi
