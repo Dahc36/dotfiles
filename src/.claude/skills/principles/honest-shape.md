@@ -19,3 +19,9 @@ An indirection earns its place where it names something for readers outside; ins
 
 Two things written alike are read as the same kind of thing.
 When they differ, that difference belongs in the shape, not in a detail the reader has to find.
+
+## A repeated form is read instead of its instances
+
+Once a unit repeats a form, the reader learns it from the first instances and skims the rest by it.
+An instance that keeps the form but drops part of what the others do is read as doing the whole.
+Either it does what the form promises, or it leaves the form so that it is read on its own.
