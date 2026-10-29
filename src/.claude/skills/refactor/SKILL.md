@@ -19,7 +19,7 @@ When principles conflict, prefer the simplest, clearest result for this specific
 ## Scope
 
 - If `$ARGUMENTS` names files or directories, refactor those.
-- Otherwise refactor the current change: the uncommitted diff (staged and unstaged). If there is none, use the diff of the current branch against the repository's default branch.
+- Otherwise refactor the current change: staged, unstaged and untracked files. If there are none, use the diff of the current branch against the repository's default branch.
 - If there is no target and no change, say so and stop.
 
 Do not refactor unrelated code, unless required by changes within the scope.
