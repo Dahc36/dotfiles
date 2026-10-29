@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-principles_dir=$(cd "${AIPRINCIPLES_DIR:-$HOME/.claude/skills/principles}" && pwd)
+repo_dir=$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." && pwd)
+principles_dir=$(cd "${AIPRINCIPLES_DIR:-$repo_dir/principles}" && pwd)
 
 if [[ "${1:-}" == --dir ]]; then
   echo "$principles_dir"

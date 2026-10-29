@@ -2,6 +2,8 @@
 
 Dotfiles to keep track of, in `src/`, mirroring their path in `$HOME`.
 
+AI principles live in `principles/`, are read through `aiprinciples`, and are not linked.
+
 ## Setup
 
 1. Install [Homebrew](https://brew.sh/)

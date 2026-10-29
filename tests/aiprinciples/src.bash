@@ -1,6 +1,6 @@
 source tests/utils.bash
 
-principles=(src/.claude/skills/principles/*.md)
+principles=(principles/*.md)
 skills=(src/.claude/skills/*/SKILL.md)
 
 tags_named_by_skills() {
@@ -24,4 +24,4 @@ test_case "Every tag a skill names exists in some principle" \
 test_case "Every tag a principle carries is named by some skill" \
   test -z "$(comm -13 <(tags_named_by_skills) <(tags_carried_by_principles))"
 test_case "No skill points at the principles folder by path" \
-  test -z "$(grep -l 'skills/principles' "${skills[@]}")"
+  test -z "$(grep -l 'principles/' "${skills[@]}")"
