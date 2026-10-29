@@ -9,7 +9,7 @@ Fix the refactoring I point at, then improve my principles so that it does not h
 
 The principles are every file printed by `aiprinciples code prose`; each one describes a principle I want to follow and the reasoning behind it.
 
-Never commit, in the project or in the principles.
+Never commit, in the project's code.
 
 ## The fix
 
@@ -34,6 +34,6 @@ Never commit, in the project or in the principles.
    4. NOTE: examples can make a principle too rigid
 4. A proposal is the exact text (the changed lines, or the whole new file) and the reasoning, in chat. Write it to `$(aiprinciples --dir)/<name>.md` only once I agree, after any adjustments.
    1. NOTE: it follows the shape of the existing files (`name:` and `tags:` frontmatter, a title, the reasoning, `##` sub-sections) and my prose principles.
-5. End by offering to commit the change.
+5. End by offering to commit the change to the principles.
    1. Propose a commit message, it should be as short as possible.
    2. Once I agree to the message, commit the principle alone with it, as the whole message: no co-author or generated-by trailer.
