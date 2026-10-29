@@ -39,7 +39,7 @@ go_up() {
 list_entries() {
   local start="$1"
   local path="$2"
-  echo "reload(printf '.\\n..\\n'; ls -AF $(printf '%q' "$start${path:+/$path}"))"
+  echo "reload(export CLICOLOR_FORCE=1; ls -dGF . ..; ls -AGF $(printf '%q' "$start${path:+/$path}"))"
 }
 
 navigate_to() {
@@ -63,10 +63,10 @@ enter() {
   path=$(path_from_prompt "$prefix" "$prompt")
 
   case "$line" in
-    .)
+    ./)
       pick "$(location "$prefix" "$path")"
       ;;
-    ..)
+    ../)
       navigate_to "$start" "$prefix" "$(go_up "$path")"
       ;;
     */)
@@ -96,6 +96,7 @@ open_finder() {
   local prefix="${1:+$start/}"
 
   FZPATH_START="$start" FZPATH_PREFIX="$prefix" exec fzf \
+    --ansi \
     --layout=reverse \
     --prompt "$(location "$prefix" "")/" \
     --bind "start:$(list_entries "$start" "")" \
