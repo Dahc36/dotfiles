@@ -42,7 +42,7 @@ Each entry is a title, one bullet per PR with its status and last activity as su
 ```markdown
 ## 1. chore: bump turbo
 
-- [web-app#3606](https://github.com/fintual/web-app/pull/3606)
+- [webapp#412](https://github.com/acme/webapp/pull/412)
   - merged
   - commit by you, 1d ago
 
@@ -51,12 +51,12 @@ Each entry is a title, one bullet per PR with its status and last activity as su
 ```
 
 ```markdown
-## 2. Bump node v22.23.4 - CA Compromise
+## 2. fix: bump node to patched release
 
-- [mobile-app#10223](https://github.com/fintual/mobile-app/pull/10223)
+- [mobile#87](https://github.com/acme/mobile/pull/87)
   - merged
-  - approved by @tamara_fintual, 1d ago
-- [design-system#3255](https://github.com/fintual/design-system/pull/3255)
+  - approved by @alice, 1d ago
+- [ui-kit#153](https://github.com/acme/ui-kit/pull/153)
   - merged
   - merged by you, 2d ago
 
