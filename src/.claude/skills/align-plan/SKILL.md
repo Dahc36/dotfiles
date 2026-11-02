@@ -1,15 +1,18 @@
 ---
 name: align-plan
-description: Carve the next step out of plan.md, align with me on what building it needs, and leave it as an alignment.md for /align-build. Only when I invoke it; never on your own initiative.
+description: Carve the next step out of a plan file, align with me on what building it needs, and leave it as an alignment.md for /align-build. Only when I invoke it; never on your own initiative.
+argument-hint: '[plan file, default plan.md]'
 disable-model-invocation: true
 ---
 
-Carve one step out of `plan.md`, align with me on what building it needs, and leave an `alignment.md` for `/align-build` at the root of the step's repo.
+Carve one step out of the plan at `$ARGUMENTS`, align with me on what building it needs, and leave an `alignment.md` for `/align-build` at the root of the step's repo.
 
 `/align` is a process for writing `alignment.md`, a list of facts and agreed decisions.
-`plan.md` is an `alignment.md` too big to build directly, at the root of the opened project.
+A plan is an `alignment.md` too big to build directly.
 
-Nothing is built. The only files written are `alignment.md` and `plan.md`, both following my prose principles. Neither is committed, and `.gitignore` is not touched.
+`$ARGUMENTS` is the plan's path. Empty means `plan.md` at the root of the opened project; when that does not exist either, ask me which file.
+
+Nothing is built. The only files written are `alignment.md` and the plan, both following my prose principles. Neither is committed, and `.gitignore` is not touched.
 
 ## The step
 
@@ -22,12 +25,12 @@ When the root does not exist, create the folder and nothing more: whatever the r
 ## alignment.md
 
 An ordinary `alignment.md`: title, facts and decisions, with no mention of the plan.
-Written at the root next to `plan.md`, updated after every exchange, and moved to the step's repo root at wrap-up.
+Written next to the plan, updated after every exchange, and moved to the step's repo root at wrap-up.
 
 The step's decisions seed it as settled. A plan fact goes where it is still needed:
 
 - to `alignment.md` when the step's work needs it
-- stays in `plan.md` when a remaining step needs it
+- stays in the plan when a remaining step needs it
 - in both when both need it
 - dropped when nothing needs it anymore
 
@@ -40,7 +43,7 @@ An `/align` interview on what the step's plan decisions leave out: the details a
 
 A plan decision is reopened only when a surfaced detail contradicts it, and is then rewritten.
 
-## plan.md at wrap-up
+## The plan at wrap-up
 
 Rewritten as `/align-build` rewrites `alignment.md` after a commit:
 
@@ -52,13 +55,13 @@ Rewritten as `/align-build` rewrites `alignment.md` after a commit:
 
 ## Process
 
-1. Stop and say so, touching nothing, if either holds:
-   - there is no `plan.md` at the root of the project
-   - an `alignment.md` already exists at the root of the project
-2. Read every file printed by `aiprinciples prose`, then `plan.md`.
+1. Resolve the plan from `$ARGUMENTS`, asking when needed. Stop and say so, touching nothing, if either holds:
+   - the plan file does not exist
+   - an `alignment.md` already exists next to it
+2. Read every file printed by `aiprinciples prose`, then the plan.
 3. Propose the step and its repo root; I decide.
 4. Seed `alignment.md` with the step's facts and decisions, then interview until I confirm shared understanding.
-5. Rewrite `plan.md`, deleting it when nothing is left.
+5. Rewrite the plan, deleting it when nothing is left.
 6. Create the repo root when it does not exist, and move `alignment.md` there.
 7. End with one line and an offer:
    - the line names the step, where `alignment.md` went and what changed in the plan
