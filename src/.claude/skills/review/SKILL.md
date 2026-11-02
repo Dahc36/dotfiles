@@ -54,7 +54,9 @@ Findings are in the order GitHub's "Files changed" tab shows them: files as `git
 
 Each finding is one block:
 
-- a header line, `## <number>. <BUG|QUALITY> <path>:<line>`, with `<path>:<start>-<end>` for a range
+- a header line, `## <number>. <BUG|QUALITY> <path>:<line> <RIGHT|LEFT>`, with `<path>:<start>-<end>` for a range
+  - `LEFT` for a deleted line, `RIGHT` for an added one
+  - a range is on one side
 - the body, for me to understand the finding
 
 Assume I have read the summary and nothing else of the PR, and that I have not memorized it. Reading the body must beat reading the PR: it explains enough to understand the problem, and nothing more. Three parts, in this order, each in whatever form explains best, prose, code, a list or a table:
@@ -72,7 +74,7 @@ Every claim that code can prove gets a GitHub permalink, `https://github.com/<ow
 
 Anything worth lifting into the review, wherever it appears (an example of the issue, how the change affects existing behavior, the evidence, the fix, a link), is written so that it can be pasted into GitHub as is.
 
-When the fix is a drop-in replacement of the anchored lines, give it in a ```suggestion block, so that once pasted it applies in one click. When it is not a drop-in, give the shape of it in a regular fenced block with the language. Code in either follows my coding principles.
+When the fix is a drop-in replacement of the anchored lines on `RIGHT`, give it in a ```suggestion block, so that once pasted it applies in one click. Otherwise, a deleted line included, give the shape of it in a regular fenced block with the language. Code in either follows my coding principles.
 
 `Unsettled`, under a `## Unsettled` header after the last finding, is a list with one line per suspicion that could not be made checkable: the suspicion and why. It is omitted when there is none, and `review-check` ignores it.
 
