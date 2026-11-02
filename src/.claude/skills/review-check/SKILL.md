@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 Read my pending review on the PR that `review.md` describes and compare it with the findings there. Report what I got wrong and what I left out, so that whatever is left out is left out on purpose.
 
-Takes no arguments: everything comes from `review.md` and from the checkout `/review` left on the PR branch.
+Takes no arguments: everything comes from `review.md` and from the checkout `/review` ran in.
 
 Nothing is ever posted, edited or deleted on GitHub, and never offer to.
 

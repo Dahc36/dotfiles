@@ -22,27 +22,34 @@ Each reviewed PR gets one local commit on its branch, on top of the PR head, nev
 
 ## Plan per branch
 
-After `git fetch origin`, the first that holds decides the plan:
+After `git fetch origin`, the first row that matches the branch decides its plan:
 
-1. `origin/<branch>` does not exist, the PR branch is gone: `failed`, with the reason
-2. no local branch: `review`; the subagent's `/review` checks it out
-3. at or behind `origin/<branch>`, no `review.md` commit on top: `review`; the subagent's `/review` fast-forwards it
-4. a `review.md` commit on top of `origin/<branch>`: `skip`, already reviewed
-5. a `review.md` commit on top of anything else, the PR moved since: `review`, after `git reset --hard origin/<branch>`
-6. any other local-only commit: `failed`, with the reason; the branch is untouched
-   NOTE: `review-bulk` never destroys what it did not create.
+| Branch                                                         | Plan     |
+| -------------------------------------------------------------- | -------- |
+| no `origin/<branch>`, the PR branch is gone                    | `failed` |
+| no local branch                                                | `review` |
+| at or behind `origin/<branch>`, no `review.md` commit on top   | `review` |
+| a `review.md` commit on top of `origin/<branch>`, reviewed     | `skip`   |
+| a `review.md` commit on top of anything else, the PR moved     | `review` |
+| any other local-only commit                                    | `failed` |
+
+- `review` checks the branch out at `origin/<branch>`, as "Reviewing one branch" says.
+- `failed` is reported with the reason, and the branch is left untouched.
+  NOTE: `review-bulk` never destroys what it did not create.
 
 ## Reviewing one branch
 
-1. Spawn a fresh subagent through the Agent tool. Its prompt gives:
+1. Check out the branch at `origin/<branch>`: `git checkout -B <branch> --track origin/<branch>`.
+   NOTE: `-B` resets the branch; on a `review` plan, the only commit it can drop is a `review.md` commit.
+2. Spawn a fresh subagent through the Agent tool. Its prompt gives:
    - the branch
    - to read `~/.claude/skills/review/SKILL.md` and follow it as written, with the branch as `$ARGUMENTS`
    - to commit nothing, and to return only its closing line, or the line saying why it stopped
-2. Success is both:
+3. Success is both:
    - it returned `/review`'s closing line
    - `git status --porcelain` prints exactly `?? review.md`
-3. On success, `git add review.md && git commit -m review.md`.
-4. On anything else, `git checkout -- . && git clean -fd`, report the branch as `failed` with the subagent's last line, and continue. The next run retries it, since no `review.md` commit exists.
+4. On success, `git add review.md && git commit -m review.md`.
+5. On anything else, `git checkout -- . && git clean -fd`, report the branch as `failed` with the subagent's last line, and continue. The next run retries it, since no `review.md` commit exists.
 
 ## Report
 

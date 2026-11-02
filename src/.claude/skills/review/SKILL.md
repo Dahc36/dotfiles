@@ -41,7 +41,7 @@ Two kinds, found in two separate passes, in this order:
 
 ## review.md
 
-Written at the root of the project, never committed, and `.gitignore` is not touched. It opens with `# PR <number>: <title>`, then the summary, then the findings, then the `Unsettled` list. No verdict, no praise, no closing take. With no findings, the summary is followed by a line saying so.
+Written at the root of the checkout and left there, never committed, and `.gitignore` is not touched. It opens with `# PR <number>: <title>`, then the summary, then the findings, then the `Unsettled` list. No verdict, no praise, no closing take. With no findings, the summary is followed by a line saying so.
 
 The summary has two parts, each an enumeration with sub-items for grouping and clarifying, optionally followed by whatever else helps understand it (code, a diagram, a table):
 
@@ -83,17 +83,17 @@ When the fix is a drop-in replacement of the anchored lines on `RIGHT`, give it 
 1. Stop and say so, touching nothing, if any of these holds:
    - there is no argument
    - `gh pr view $ARGUMENTS` finds no PR, or the PR is not open
+   - `git rev-parse HEAD` is not the PR's `headRefOid`
    - `git status --porcelain` prints anything; untracked files count as dirty
-2. Check out the PR at its latest head: `gh pr checkout <number>`, then `git pull --ff-only`. If the fast-forward fails, say so and stop; never merge or reset.
-   Then, if a `review.md` exists at the root of the project, tracked or not, say so and stop.
-   NOTE: stay on the PR branch when done.
-3. Read every file printed by `aiprinciples prose`, then the context the author shared: the title, the body, and whatever the body links to (issues, docs, Slack threads, other PRs, a file or line the author points at). Nothing else of the PR's code is read yet. Do not read existing review comments or threads: duplicates are fine, and reading them biases the review toward what others already flagged.
-4. Write `review.md` with the title and `Intent`, before reading any code, so that `Intent` cannot come from the code.
-5. Read the change. Fetch the PR's base branch and take it as `git diff origin/<base>...HEAD`. Read every changed file in full, plus callers and callees when needed to understand it.
-6. Write `Implementation`.
-7. Bug pass.
-8. Quality pass. Read every file printed by `aiprinciples code`, then review the touched lines against them and the repo's conventions.
-9. Write the findings and the `Unsettled` list.
-10. Apply the prose principles to `review.md`.
-11. Check that `git status --porcelain` prints only `review.md`; remove whatever an experiment left behind.
-12. End with one line: how many bugs and quality findings were written, how many of the bugs are unsettled, how many suspicions are in `Unsettled`, and that `review.md` is at the root.
+   - a `review.md` exists at the root of the checkout, tracked or not
+   NOTE: the checkout is the caller's to prepare; never check out, pull, merge or reset.
+2. Read every file printed by `aiprinciples prose`, then the context the author shared: the title, the body, and whatever the body links to (issues, docs, Slack threads, other PRs, a file or line the author points at). Nothing else of the PR's code is read yet. Do not read existing review comments or threads: duplicates are fine, and reading them biases the review toward what others already flagged.
+3. Write `review.md` with the title and `Intent`, before reading any code, so that `Intent` cannot come from the code.
+4. Read the change. Fetch the PR's base branch and take it as `git diff origin/<base>...HEAD`. Read every changed file in full, plus callers and callees when needed to understand it.
+5. Write `Implementation`.
+6. Bug pass.
+7. Quality pass. Read every file printed by `aiprinciples code`, then review the touched lines against them and the repo's conventions.
+8. Write the findings and the `Unsettled` list.
+9. Apply the prose principles to `review.md`.
+10. Check that `git status --porcelain` prints only `review.md`; remove whatever an experiment left behind.
+11. End with one line: how many bugs and quality findings were written, how many of the bugs are unsettled, how many suspicions are in `Unsettled`, and that `review.md` is at the root.
