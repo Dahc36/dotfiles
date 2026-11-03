@@ -69,5 +69,18 @@
     "key": "shift+cmd+n",
     "command": "explorer.newFolder",
     "when": "filesExplorerFocus"
+  },
+
+  {
+    "key": "cmd+' d",
+    "command": "git.openChange"
+  },
+  {
+    "key": "cmd+' a",
+    "command": "git.openAllChanges"
+  },
+  {
+    "key": "cmd+' v",
+    "command": "git.viewChanges"
   }
 ]
