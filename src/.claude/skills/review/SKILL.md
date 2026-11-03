@@ -76,7 +76,7 @@ Anything worth lifting into the review, wherever it appears (an example of the i
 
 When the fix is a drop-in replacement of the anchored lines on `RIGHT`, give it in a ```suggestion block, so that once pasted it applies in one click. Otherwise, a deleted line included, give the shape of it in a regular fenced block with the language. Code in either follows my coding principles.
 
-`Unsettled`, under a `## Unsettled` header after the last finding, is a list with one line per suspicion that could not be made checkable: the suspicion and why. It is omitted when there is none, and `review-check` ignores it.
+`Unsettled`, under a `## Unsettled` header after the last finding, is a list with one line per suspicion that could not be made checkable: the suspicion and why. It is omitted when there is none.
 
 ## Process
 
