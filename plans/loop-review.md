@@ -33,7 +33,7 @@ Idea: `idea.md`.
 - `mise` is a shell function in interactive shells; the binary is `/opt/homebrew/bin/mise`, and its shims are in `~/.local/share/mise/shims`.
 - A `claude -p` session's Bash gets my profile's functions, but its PATH from whoever launched it.
   - From a bare environment, `go` and `node` were missing, `ruby` was `/usr/bin/ruby`, and `aiprinciples` was not found.
-- With decision 36's PATH, `gh` inside a bare-environment `claude -p` session authenticates as `hans_fintual`.
+- With decision 32's PATH, `gh` inside a bare-environment `claude -p` session authenticates as `hans_fintual`.
 - `claude -p` skips the workspace trust dialog.
 - `claude --resume <id>` works from any folder, even after the session's folder is deleted.
 - Each session folder gets its own `~/.claude/projects/<path-with-dashes>/`, holding `<id>.jsonl` and a `memory/` folder.
@@ -62,41 +62,36 @@ Idea: `idea.md`.
 ## Decisions
 
 1. The record is `review.md`, kept outside the reviewed repo, plus the pending review on GitHub.
-2. `/review-draft` turns `review.md` into the draft.
-   - It carries my instructions on tone, language and how each problem is presented.
-   - Comments are rewritten, not copied from the findings.
-3. `/review-draft` writes the draft file `loop-review post` takes: JSON with a top-level `head`, the sha reviewed, and `comments`, one per comment.
-   - Each comment has `path`, `line`, `side` and `body`, plus `startLine` for a range, which is on one side.
-   - Every GitHub write is plain code.
-4. Each review runs in a throwaway worktree, detached at the PR head.
+2. Every GitHub write is plain code, never a skill's.
+3. Each review runs in a throwaway worktree, detached at the PR head.
    - Setup runs from scratch every time, on purpose.
-5. Worktrees share the clone's ports, volumes and databases, so only repos whose `setup` and tests stay off them are listed.
+4. Worktrees share the clone's ports, volumes and databases, so only repos whose `setup` and tests stay off them are listed.
    - Making a repo safe to list is that repo's job; the runner adds no isolation.
    - The runner's README documents this limitation.
-6. The runner polls only a configured list of repos, never all of GitHub.
-7. Worktrees come from my working clone.
+5. The runner polls only a configured list of repos, never all of GitHub.
+6. Worktrees come from my working clone.
    - A listed repo with no clone is reported as an error, and the other repos go on.
-8. Each list entry is a clone path, and `<owner>/<repo>` comes from its `origin`.
+7. Each list entry is a clone path, and `<owner>/<repo>` comes from its `origin`.
    - Two listed repos with the same name under different owners make the runner stop with an error.
    - Each entry must have a `setup` command, which the runner runs in each fresh worktree before `/review`.
    - An entry without `setup` is reported as an error, like a missing clone, and the other repos go on.
    - A failing `setup` makes the PR `failed`, naming the setup step.
-9. The runner keeps its own state, per review run: the head sha it reviewed, and how far the run got.
+8. The runner keeps its own state, per review run: the head sha it reviewed, and how far the run got.
    - Each poll reads GitHub for whether my review is pending or submitted, and whether the head moved.
    - When the two disagree, GitHub wins for whatever GitHub knows.
    - A submitted review is checked before whether the PR is closed, so a round I submitted goes to `comparing` even after a close or merge.
-10. The state lives in SQLite, one row per review run.
-11. A run I have not submitted becomes `review stale` when its PR gets new commits, and reruns only when I ask.
-12. A re-request after I submitted starts a new round on its own, as a new row.
+9. The state lives in SQLite, one row per review run.
+10. A run I have not submitted becomes `review stale` when its PR gets new commits, and reruns only when I ask.
+11. A re-request after I submitted starts a new round on its own, as a new row.
     - It reviews the whole PR at the new head, without reading my earlier comments.
-13. Each round's artifacts are flat files in `reviews/`:
+12. Each round's artifacts are flat files in `reviews/`:
     - `<repo>-<number>-<round>.review.md`
     - `<repo>-<number>-<round>.draft.json`
     - `<repo>-<number>-<round>.discrepancies.json`
     - The round is 1 plus my reviews on the PR not in `PENDING` state, and only keeps file names apart.
     - A rerun within a round removes that round's old files before writing new ones.
     - The head sha each run reviewed is only in SQLite.
-14. Cleanup:
+13. Cleanup:
     - A round's files and transcripts are deleted only from `discrepancies found`:
       - once `/review-improve` deletes its discrepancies file
       - at once, when `/review-compare` finds none
@@ -104,20 +99,19 @@ Idea: `idea.md`.
     - When the PR is closed or merged with no review of mine submitted in the round, they are deleted in every state, runs in progress included.
     - A submitted round goes through `comparing` and `discrepancies found` as usual, closed or not.
     - A closed or merged PR's rows are deleted once nothing of it is left on the page.
-15. `loop-review post` posts nothing when any comment breaks a rule, and the PR is `failed`, naming each invalid comment and the rule:
+14. `loop-review post` posts nothing when any comment breaks a rule, and the PR is `failed`, naming each invalid comment and the rule:
     - anchored on touched lines: added and context lines on `RIGHT`, removed lines on `LEFT`, every line of a range included
     - a `suggestion` block only on `RIGHT`, on a range GitHub can apply, and at most one per comment
     - every permalink into the reviewed repo resolves: the sha, the path at it and the line numbers
-16. A fix for a deleted line goes in a regular fenced block, never a `suggestion` block.
-17. `/review-draft` checks each rewritten comment against its finding.
-18. The draft has exactly one comment per finding: no dropping, no merging.
-    - What goes into the review is decided by me, by deleting comments in "Files changed".
-19. The summary and `Unsettled` are read on the page, never posted to GitHub.
-20. The pending review's body stays empty; any overall comment I write when I submit.
-21. `/review` and `/review-draft` run as two separate `claude -p` sessions.
-    - `/review` runs in the worktree; `/review-draft` runs on the moved `review.md` and writes the draft file next to it.
+15. The summary and `Unsettled` are read on the page, never posted to GitHub.
+16. The pending review's body is empty, except `LGTM` and an emoji when the review has no findings; any overall comment I write when I submit.
+    - `loop-review post` takes an optional `body` in the draft and posts it as the review's body.
+17. `/review` and `/review-draft` run as two separate `claude -p` sessions.
+    - `/review` runs in the worktree.
+    - `/review-draft <review.md path> <head sha>` runs on the moved `review.md` and writes `<name>.draft.json` next to it.
+      - It refuses when the draft file exists, so a rerun deletes the old draft first.
     - `/review-draft` can rerun alone, without a new review.
-22. Every `claude -p` session runs with `--permission-mode bypassPermissions`, plus `--disallowedTools` for GitHub writes.
+18. Every `claude -p` session runs with `--permission-mode bypassPermissions`, plus `--disallowedTools` for GitHub writes.
     - Every session denies `git push` and `gh auth token`.
     - `/review` denies `gh api` entirely, plus the writing subcommands:
       - `gh pr review`, `comment`, `merge`, `edit`, `close` and `create`
@@ -125,7 +119,7 @@ Idea: `idea.md`.
     - Deny rules match command prefixes, so this guards against accidents only; `gh -R <repo> pr review` would get past it.
     - Unattended sessions read text others wrote, approve every tool call, and run with my credentials.
       - This exposure is accepted until the runner has a proper sandbox.
-23. A PR on the page is in one of these states:
+19. A PR on the page is in one of these states:
 
     | State                 | Meaning                                                  |
     | --------------------- | -------------------------------------------------------- |
@@ -140,8 +134,8 @@ Idea: `idea.md`.
     | `failed`              | a step failed, with why and any denied tool calls        |
 
     - A PR that turns into a draft, or drops my request, after posting stays `review ready`.
-    - A `discarded` PR is not queued again until a re-request after I submit, as in decision 12.
-24. The page offers links and commands to copy, per state:
+    - A `discarded` PR is not queued again until a re-request after I submit, as in decision 11.
+20. The page offers links and commands to copy, per state:
 
     | State                 | Links                                      | Commands                    |
     | --------------------- | ------------------------------------------ | --------------------------- |
@@ -159,37 +153,37 @@ Idea: `idea.md`.
     - `re-review` discards my pending review and reruns `/review` and `/review-draft`.
     - `re-compare` reruns `/review-compare`.
     - `redraft` and `re-review` refuse when my pending review changed since it was posted, unless forced.
-25. My pending review changed since it was posted when any of these holds:
+21. My pending review changed since it was posted when any of these holds:
     - a posted comment is missing
     - a comment was added
     - a comment has `lastEditedAt`
-    - the body is not empty
+    - the body differs from the one posted
     - The run's row records the ids of the comments it posted.
-26. A pending review of mine that the runner did not post makes the PR `failed` before `/review` starts, naming it.
-27. One session runs at a time, across all repos and manual commands.
+22. A pending review of mine that the runner did not post makes the PR `failed` before `/review` starts, naming it.
+23. One session runs at a time, across all repos and manual commands.
     - Every runner invocation holds a `flock` on `reviews/loop-review.lock`.
     - When it is held, a manual command refuses, naming the PR and step running, and a launchd poll exits silently.
     - At startup, holding it, any `reviewing`, `drafting` or `comparing` row becomes `failed`, "interrupted".
       - Its worktree is removed with `git worktree remove --force` and `git worktree prune`.
-28. The queue is `/review-bulk`'s, per listed repo: open, non-draft PRs requesting me directly, oldest first.
-29. launchd starts the runner every 15 minutes.
-30. The page is `reviews/index.html`.
+24. The queue is `/review-bulk`'s, per listed repo: open, non-draft PRs requesting me directly, oldest first.
+25. launchd starts the runner every 15 minutes.
+26. The page is `reviews/index.html`.
     - The runner rewrites it atomically on every state change.
     - It reloads itself every 30 seconds.
     - A running step shows when it started.
     - While the runner holds the lock, the page says so on top, naming the PR and step.
       - NOTE: manual commands refuse meanwhile.
-    - A warning on top names the dotfiles paths holding runs back (decision 38).
-31. The runner is `Dahc36/loop-review`, cloned at `~/code/loop-review`.
+    - A warning on top names the dotfiles paths holding runs back (decision 34).
+27. The runner is `Dahc36/loop-review`, cloned at `~/code/loop-review`.
     - It holds no company code or data; fixtures use made-up PRs.
     - `reviews/`, the SQLite file and the config live in the clone, ignored by its `.gitignore`.
       - `reviews/` is always `~/code/loop-review/reviews/`, for the runner and for `/review-bulk` alike.
-32. When I submit a review, the skills improve from it:
+28. When I submit a review, the skills improve from it:
     1. The runner fetches my submitted review: body and comments.
     2. `/review-compare` writes the round's discrepancies file, one entry per difference: a deleted, rewritten or added comment, or the body I wrote.
     3. With no discrepancies, the round's files are deleted and the PR leaves the page.
     4. Otherwise I run `/review-improve <path>` from dotfiles, copying the command from the page.
-33. `/review-improve` is interactive, modeled on `/align-build`:
+29. `/review-improve` is interactive, modeled on `/align-build`:
     1. It stops unless the dotfiles working tree is clean.
     2. We align on one commit's worth of improvement, dismissals included, one question at a time.
     3. It edits the skill files locally, following `aiprinciples prose`, and suggests a commit message; it never stages or commits.
@@ -197,39 +191,38 @@ Idea: `idea.md`.
     5. It waits for me to commit, checks the tree is clean again, and goes on to the next round.
     6. It deletes the file once it is empty.
     - NOTE: the file holds only what is left, so a session can stop anywhere and resume later.
-34. `/review-improve` keeps company content out of dotfiles:
+30. `/review-improve` keeps company content out of dotfiles:
     - skill edits and commit messages never carry repo names, PR numbers, identifiers or code from the reviewed repo
     - examples in a skill are made up, and each lesson is stated as a general rule
-35. The three new skills live in dotfiles, next to `/review`:
-    - `/review-draft` turns `review.md` into the draft file.
+31. The two remaining skills live in dotfiles, next to `/review` and `/review-draft`:
     - `/review-compare` finds the discrepancies between my submitted review, `review.md` and the draft.
     - `/review-improve` turns the discrepancies into skill edits, with me.
-36. The runner gives every process it starts a working environment:
+32. The runner gives every process it starts a working environment:
     - PATH starts with `~/bin`, `~/.local/share/mise/shims`, `/opt/homebrew/bin` and `~/.local/bin`.
     - `MISE_TRUSTED_CONFIG_PATHS` covers the folder holding the worktrees.
-37. Each `claude -p` session's id is recorded on its run's row, so cleanup (decision 14) can delete its transcript under `~/.claude/projects`.
-38. Before each step, the runner checks the dotfiles paths it depends on against `main`:
+33. Each `claude -p` session's id is recorded on its run's row, so cleanup (decision 13) can delete its transcript under `~/.claude/projects`.
+34. Before each step, the runner checks the dotfiles paths it depends on against `main`:
     - the step's skill folder, `principles/` and the `aiprinciples` script
     - Uncommitted, untracked or not-on-`main` changes there hold every step back, and the page warns.
-39. Every process the runner starts has a timeout, and each session a spend cap too, all runaway guards:
+35. Every process the runner starts has a timeout, and each session a spend cap too, all runaway guards:
     - `/review`: 45 minutes, $10
     - `/review-draft` and `/review-compare`: 10 minutes, $2 each
     - `setup`: a limit per list entry, with a default
     - `gh` calls and `claude -p /usage`: a short limit
     - Hitting any makes the PR `failed`, naming the step and the limit.
-40. Before each session, the runner reads `claude -p /usage`, and starts none above a configured usage:
+36. Before each session, the runner reads `claude -p /usage`, and starts none above a configured usage:
     - 60% of the 5-hour window
     - 75% of the week
     - The output is prose: the runner matches the `Current session` and `Current week` lines by pattern, and takes the highest weekly percentage.
     - A missing line starts nothing, warns on the page, and the next poll retries.
     - A usage-limit error puts the PR back in its state before that step, and a poll after the reset retries it.
-41. The runner's config sets the model per skill, every one defaulting to `opus`.
+37. The runner's config sets the model per skill, every one defaulting to `opus`.
     - `/review` drops its `model: opus` frontmatter; the runner passes `--model`.
       - A manual `/review` runs on the session's model, since frontmatter would beat `--model`.
-42. Only `/review` uses `gh`, read-only, as `hans_fintual`; `/review-draft` and `/review-compare` have `gh` denied.
-43. `gh` keeps a single account, `hans_fintual`, so the runner needs no account pinning.
-44. A review submitted on a PR `loop-review` never drafted is ignored.
-45. The work lands in two phases, and `/review-bulk` works throughout.
+38. Only `/review` uses `gh`, read-only, as `hans_fintual`; `/review-draft` and `/review-compare` have `gh` denied.
+39. `gh` keeps a single account, `hans_fintual`, so the runner needs no account pinning.
+40. A review submitted on a PR `loop-review` never drafted is ignored.
+41. The work lands in two phases, and `/review-bulk` works throughout.
     1. Posting first:
        1. `/review-bulk`, per PR, checks out the branch in my clone, runs `/review`, moves `review.md` to `reviews/`, runs `/review-draft` and `loop-review post`.
           - It skips a PR on which I already have a pending review, and commits nothing.
@@ -239,7 +232,7 @@ Idea: `idea.md`.
        1. The poller, SQLite, the page and the improvement steps grow around `loop-review post`.
        2. `/review-bulk` switches to `loop-review adopt <clone> <number> <review.md>`, after which the runner drafts, posts and tracks the PR like its own.
     - `/review-bulk` stays for the repos not listed.
-46. Dotfiles moves to `~/code/dotfiles`, out of `~/Documents`, before the first unattended run.
+42. Dotfiles moves to `~/code/dotfiles`, out of `~/Documents`, before the first unattended run.
     - Its symlinks are absolute, so every one breaks until `make link` runs from the new path:
       - shell configs, `~/.vimrc` and `~/.tmux.conf`
       - `~/bin/aiprinciples` and `~/bin/fzpath`
