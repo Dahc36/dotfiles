@@ -10,8 +10,6 @@ Idea: `idea.md`.
   - findings headed `## <n>. <BUG|QUALITY> <path>:<line> <RIGHT|LEFT>`, with `<start>-<end>` for a range
   - `## Unsettled`
 - `/review` anchors a finding on the touched line that caused it, a deleted line included.
-- `/review-bulk` commits each `review.md` on its PR branch, and that commit marks the PR as reviewed.
-- `/review-check` reads `review.md` from that commit.
 - `Dahc36/dotfiles` is public.
 - Skills and principles are symlinks into the dotfiles working tree; `aiprinciples` reads `principles/` and is linked at `~/bin/aiprinciples`.
 - `claude -p "/<skill> <args>"` runs a user skill, even with `disable-model-invocation: true`, and passes the args as `$ARGUMENTS`.
@@ -111,7 +109,8 @@ Idea: `idea.md`.
     - `/review-draft <review.md path> <head sha>` runs on the moved `review.md` and writes `<name>.draft.json` next to it.
       - It refuses when the draft file exists, so a rerun deletes the old draft first.
     - `/review-draft` can rerun alone, without a new review.
-18. Every `claude -p` session runs with `--permission-mode bypassPermissions`, plus `--disallowedTools` for GitHub writes.
+18. Every `claude -p` session runs with `--permission-mode auto`, plus `--disallowedTools` for GitHub writes.
+    - Auto mode's classifier blocks what it judges unsafe or off-task, and a blocked call shows in `permission_denials`.
     - Every session denies `git push` and `gh auth token`.
     - `/review` denies `gh api` entirely, plus the writing subcommands:
       - `gh pr review`, `comment`, `merge`, `edit`, `close` and `create`
@@ -222,15 +221,9 @@ Idea: `idea.md`.
 38. Only `/review` uses `gh`, read-only, as `hans_fintual`; `/review-draft` and `/review-compare` have `gh` denied.
 39. `gh` keeps a single account, `hans_fintual`, so the runner needs no account pinning.
 40. A review submitted on a PR `loop-review` never drafted is ignored.
-41. The work lands in two phases, and `/review-bulk` works throughout.
-    1. Posting first:
-       1. `/review-bulk`, per PR, checks out the branch in my clone, runs `/review`, moves `review.md` to `reviews/`, runs `/review-draft` and `loop-review post`.
-          - It skips a PR on which I already have a pending review, and commits nothing.
-       2. `/review-check` is deleted.
-       - NOTE: no compare or improvement runs in this phase.
-    2. The runner:
-       1. The poller, SQLite, the page and the improvement steps grow around `loop-review post`.
-       2. `/review-bulk` switches to `loop-review adopt <clone> <number> <review.md>`, after which the runner drafts, posts and tracks the PR like its own.
+41. The runner grows around `loop-review post`, and `/review-bulk` works throughout:
+    1. The poller, SQLite, the page and the improvement steps.
+    2. `/review-bulk` switches to `loop-review adopt <clone> <number> <review.md>`, after which the runner drafts, posts and tracks the PR like its own.
     - `/review-bulk` stays for the repos not listed.
 42. Dotfiles moves to `~/code/dotfiles`, out of `~/Documents`, before the first unattended run.
     - Its symlinks are absolute, so every one breaks until `make link` runs from the new path:
