@@ -11,5 +11,5 @@ gh pr list \
   --search "review-requested:@me draft:false sort:created-asc" \
   --state open \
   --limit "$queue_limit" \
-  --json headRefName,reviewRequests \
-  --jq ".[] | select(any(.reviewRequests[]; .login == \"$me\")) | .headRefName"
+  --json number,headRefName,headRefOid,reviewRequests \
+  --jq ".[] | select(any(.reviewRequests[]; .login == \"$me\")) | [.number, .headRefName, .headRefOid] | @tsv"
