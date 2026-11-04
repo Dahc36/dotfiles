@@ -48,6 +48,19 @@ Whatever sections the convention gives, they should carry:
   - If any manual check is needed, or a smoke test or a whole flow, it should be detailed as numbered steps.
   - A step names the place to go and the control to act on: the story, screen or command, then the button or field.
   - Those names are looked up in the repo, so the reader finds them as written: the story title, the screen route, the button label.
+  - Manual steps are followed by placeholders for their evidence, in the same section, with no heading of their own.
+    - CI alone gets no evidence, nor a mention of it.
+    - Evidence is never captured, only drafted as embeds with `TODO` as their source.
+      - Filling one is pasting the attachment URL in place of `TODO`.
+    - One step, or several steps in the same place and flow, get a single embed.
+    - Several steps that each open a different story, screen or command get a table.
+      - One row per step.
+      - The first column is the case, named by what the step opens.
+      - Then one column per place the steps run in, named as the steps name it, like "Storybook", or "Web" and "Mobile".
+    - The embed follows the step's expected result:
+      - Motion or a sequence, like typing, pressing, an animation or a sheet opening: `<video src="TODO">`.
+      - A static look, like a color, a layout or a value shown: `<img src="TODO">`.
+      - Both: a video.
 
 It is always in English. Identifiers and business terms that already exist in another language stay as they are, never translated.
 
@@ -59,6 +72,7 @@ Only after I say to open the PR:
    1. Never force push; if the push is rejected, say so and stop.
 2. Read the title from the first line of `PR.md`.
 3. Read the body from the rest, so that my edits are what gets posted.
+   1. NOTE: evidence placeholders left in it do not block; they are filled on GitHub, where attachments are uploaded.
 4. Open the PR with `gh pr create --draft --base <base> --title <title> --body-file <body>`.
    1. Nothing else is set: no reviewers, labels, assignees or project.
 5. Remove `PR.md`.
