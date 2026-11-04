@@ -14,6 +14,12 @@ A placeholder or a single letter only repeats the shape the type already gives.
 The name adds what the type cannot: what this value is in this code and what it is for.
 Repeating the type in the name adds nothing either; name and type each carry their half.
 
+## Brevity needs context
+
+Brevity is fine when the scope supplies the context, and wrong when it doesn't.
+A module, a directory or a type already says part of what the names inside it mean.
+Flat listings supply none: each name is read against its siblings, and carries its own context.
+
 ## The established term wins
 
 When the reader's ecosystem already has a word for a pattern, that word is the name.
