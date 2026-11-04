@@ -57,7 +57,7 @@ After `git fetch origin`, the first row that matches the PR decides its plan:
 `/review`, with the PR number:
 
 ```
-claude -p "/review <number>" \
+claude -p "/review <number>" --model opus \
   --permission-mode auto --output-format json \
   --disallowedTools "Bash(git push:*)" "Bash(gh auth token:*)" "Bash(gh api:*)" \
     "Bash(gh pr review:*)" "Bash(gh pr comment:*)" "Bash(gh pr merge:*)" \
