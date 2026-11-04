@@ -31,3 +31,8 @@ Numbered steps are easy to follow in order, add sub-steps for both multiple-step
 ## Enumerations should each get their own line
 
 When defining multiple processes, options or any list of items: use a list that gives each option its own line.
+
+## Counts go stale
+
+A number that describes content changes whenever the content does, and nobody updates it.
+Name the set or grouping instead of counting it.
