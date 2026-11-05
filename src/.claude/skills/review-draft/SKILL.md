@@ -37,9 +37,10 @@ The summary and the `Unsettled` list are not in the draft.
 
 Its wording is rewritten from its finding, never copied, in three parts, in this order, and nothing else:
 
-1. What is wrong and its consequence, in a line or two.
+1. What is wrong, short, with its consequence on its own line.
 2. The evidence as the finding gives it: the rerunnable command and its output, or the permalinks.
 3. The fix, in the finding's ```suggestion block when it has one, or the way to settle an unsettled bug.
+   - Context the fix depends on goes here too, such as a linked PR or a design left unchecked.
 
 No reminder of what the code does, no `BUG` or `QUALITY` label, no finding number.
 
@@ -68,15 +69,21 @@ Spawn it through the Agent tool with a prompt that gives:
 - the comment: its `path`, `line`, `side`, `startLine` when present, and `body`
 - the rules in "A comment" above, copied in full
 - the task:
-  - report what the comment adds, drops or changes from the finding in the location, the claim, the consequence, the evidence and the fix
-  - report every rule the comment breaks
-  - compare code, commands, their output and links byte for byte
+  - under `Blocking:`, report what the comment adds, drops or changes from the finding in the location, the claim, the consequence, the evidence and the fix
+  - under `Blocking:`, report every rule the comment cannot break that it breaks
+  - under `Blocking:`, report code, commands, their output and links that differ from the finding byte for byte
+  - under `Notes:`, report every other rule in "A comment" the comment breaks: the parts, their order, length and voice
   - leave unreported the Spanish wording, and the reminder of what the code does, the label and the number, all dropped by design
   - return `PASS` alone when there is nothing to report
 
-A comment passes only on `PASS`.
-A failed comment is rewritten from its finding and the report, and judged again by a new subagent.
-After the third failure on one comment, stop: write no draft, and name the finding and the last report.
+A comment passes when its report has nothing under `Blocking:`.
+
+- A comment that passes with notes is rewritten once to apply them, and judged again by a new subagent.
+  - If that rewrite has anything under `Blocking:`, the version that passed is kept.
+  - Its new notes are left as they are.
+- A failed comment is rewritten from its finding and the whole report, and judged again by a new subagent.
+- After the third failure on one comment, stop: write no draft, and name the finding and the last report.
+  - Only failures count; a notes rewrite never does.
 
 ## Process
 
