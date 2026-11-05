@@ -1,7 +1,5 @@
 # Plan: loop-review
 
-Idea: `idea.md`.
-
 ## Facts
 
 - `review.md` has a fixed shape:
@@ -11,6 +9,7 @@ Idea: `idea.md`.
   - `## Unsettled`
 - `/review` anchors a finding on the touched line that caused it, a deleted line included.
 - `Dahc36/dotfiles` is public.
+- Dotfiles lives at `~/code/dotfiles`.
 - Skills and principles are symlinks into the dotfiles working tree; `aiprinciples` reads `principles/` and is linked at `~/bin/aiprinciples`.
 - `claude -p "/<skill> <args>"` runs a user skill, even with `disable-model-invocation: true`, and passes the args as `$ARGUMENTS`.
 - `--output-format json` returns `result`, `is_error`, `subtype`, `permission_denials`, `session_id` and `total_cost_usd`.
@@ -172,10 +171,3 @@ Idea: `idea.md`.
     1. The poller, SQLite, the page and the improvement steps.
     2. `/review-bulk` switches to `loop-review adopt <clone> <number> <review.md>`, after which the runner drafts, posts and tracks the PR like its own.
     - `/review-bulk` stays for the repos not listed.
-31. Dotfiles moves to `~/code/dotfiles`, out of `~/Documents`, before the first unattended run.
-    - Its symlinks are absolute, so every one breaks until `make link` runs from the new path:
-      - shell configs, `~/.vimrc` and `~/.tmux.conf`
-      - `~/bin/aiprinciples` and `~/bin/fzpath`
-      - `~/.claude/settings.json`, `~/.claude/statusline.sh` and every skill's files
-    - No tracked file hard-codes `~/Documents`; `scripts/link.bash` builds paths from `$PWD`.
-    - Claude Code keys project memory by path, so this project's memory stays under the old path's folder in `~/.claude/projects` until it is moved too.
