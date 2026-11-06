@@ -7,7 +7,6 @@
   - submitting ends the round: its files and transcripts are deleted and the PR leaves the page
   - a review submitted on a PR it never drafted is ignored
   - a step that fails puts the PR in `failed`, and the page offers that step's rerun
-  - before each step, it checks the step's skill folder, `principles/` and the `aiprinciples` script in dotfiles against `main`, and holds every step back while any of them has uncommitted, untracked or not-on-`main` changes
 - `review.md` has a fixed shape:
   - `# PR <number>: <title>`
   - `Intent` and `Implementation`
@@ -46,7 +45,6 @@
    - `--permission-mode auto`, and `--model` from `models` in `config.json`, defaulting to `opus`
    - `--disallowedTools` denying `git push`, `gh auth token` and `gh` entirely
    - a 10-minute timeout and a $2 spend cap, failing the PR when hit, naming the step and the limit
-   - the dotfiles check before the step covers its skill folder, like every other step's
 6. The page gets two states:
 
    | State                 | Meaning                                          |

@@ -10,10 +10,6 @@
 - `/review` anchors a finding on the touched line that caused it, a deleted line included.
 - `Dahc36/dotfiles` is public.
 - Dotfiles lives at `~/code/dotfiles`.
-- Skills and principles are symlinks into the dotfiles working tree; `aiprinciples` reads `principles/` and is linked at `~/bin/aiprinciples`.
-- My Claude account is a Team seat with no usage credits:
-  - its allowance resets on a 5-hour and a weekly window, shared with my own Claude use
-  - `claude -p /usage` reads it at no cost
 - From a real LaunchAgent, `claude` and `gh` authenticate through the keychain, with no dialog:
   - `claude`: `~/.local/bin/claude`
   - `gh`: `/opt/homebrew/bin/gh`, as `hans_fintual`
@@ -89,18 +85,9 @@
     - A running step shows when it started.
     - While the runner holds the lock, the page says so on top, naming the PR and step.
       - NOTE: manual commands refuse meanwhile.
-    - A warning on top names the dotfiles paths holding runs back (decision 12).
+    - A warning on top quotes the usage line holding sessions back, or says that `claude -p /usage` printed none.
 11. The runner holds no company code or data; fixtures use made-up PRs.
-12. Before each step, the runner checks the dotfiles paths it depends on against `main`:
-    - the step's skill folder, `principles/` and the `aiprinciples` script
-    - Uncommitted, untracked or not-on-`main` changes there hold every step back, and the page warns.
-13. Before each session, the runner reads `claude -p /usage`, with a short timeout, and starts none above a configured usage:
-    - 60% of the 5-hour window
-    - 75% of the week
-    - The output is prose: the runner matches the `Current session` and `Current week` lines by pattern, and takes the highest weekly percentage.
-    - A missing line starts nothing, warns on the page, and the next poll retries.
-    - A usage-limit error puts the PR back in its state before that step, and a poll after the reset retries it.
-14. The runner grows around `loop-review poll`, and `/review-bulk` works throughout:
-    1. The page, the guards before each step and session, and launchd.
+12. The runner grows around `loop-review poll`, and `/review-bulk` works throughout:
+    1. The page and launchd.
     2. `/review-bulk` switches to `loop-review adopt <clone> <number> <review.md>`, after which the runner drafts, posts and tracks the PR like its own.
     - `/review-bulk` stays for the repos not listed.
