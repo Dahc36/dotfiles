@@ -8,6 +8,7 @@ Implement one commit's worth of the work agreed in `alignment.md`, so that each 
 `alignment.md` is the output of `/align`: a short list of facts and agreed decisions. The pending work is the gap between what it says and what the code does. Do not reopen the decisions in it.
 
 Its last decision, how the work ships, is pending work this skill never builds: `/pr-draft` does.
+When no decision says how the work ships, it ships with no PR.
 
 ## Scope
 
