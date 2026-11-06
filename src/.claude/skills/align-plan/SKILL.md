@@ -65,4 +65,4 @@ Rewritten as `/align-build` rewrites `alignment.md` after a commit:
 6. Create the repo root when it does not exist, and move `alignment.md` there.
 7. End with one line and an offer:
    - the line names the step, where `alignment.md` went and what changed in the plan
-   - the offer is `/align-build` from the step's repo, as the next step
+   - the offer is to commit alignment.md in the repo with a version of "align: <short headline>" that matches the repo's conventions.

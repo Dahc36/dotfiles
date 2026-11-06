@@ -14,3 +14,5 @@ alignment.md: Build a short list of facts and the agreed decisions so both sides
 Before writing it, read every file printed by `aiprinciples prose` and follow them, on every write and update.
 Do not act on it.
 Keep aligning until I confirm we have reached a shared understanding.
+
+End by offering to commit alignment.md with a version of "align: <short headline>" that matches the repo's conventions.

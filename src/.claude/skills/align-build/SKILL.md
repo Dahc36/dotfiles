@@ -30,6 +30,5 @@ Implement one commit's worth of the work agreed in `alignment.md`, so that each 
    - Delete `alignment.md` only when nothing pending remains, follow-ups included, and say so.
 8. Summarize:
    - the step done, with file locations
-   - the checks run and their results, or that none were found
-   - a suggested commit message, following the repo's convention or Conventional Commits
    - what remains in `alignment.md`, and what you would pick next
+   - offer to commit the changes with a message of just a short headline, that fits the repo's convention
