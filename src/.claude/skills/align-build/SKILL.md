@@ -7,6 +7,8 @@ Implement one commit's worth of the work agreed in `alignment.md`, so that each 
 
 `alignment.md` is the output of `/align`: a short list of facts and agreed decisions. The pending work is the gap between what it says and what the code does. Do not reopen the decisions in it.
 
+Its last decision, how the work ships, is pending work this skill never builds: `/pr-draft` does.
+
 ## Scope
 
 - `alignment.md` is always the one at the root of the opened project. If there is none, say so and stop.
@@ -25,9 +27,15 @@ Implement one commit's worth of the work agreed in `alignment.md`, so that each 
 7. Read every file printed by `aiprinciples prose`, then update `alignment.md` following them:
    - Remove every fact and decision that only concerned the work now done. The code is the record of it from here on.
    - Keep facts and decisions that still matter for the remaining work, reworded if the done work changes how they read.
+   - When the work ships as a PR, keep what `/pr-draft` needs for its body, nested under the PR it belongs to in the shipping decision:
+     - why the change exists
+     - the decisions the diff does not explain by itself, with their reason
+     - the manual verification steps
    - Add nothing about progress: no done sections, checkmarks, changelog or notes about this step. The file must read as if the done work had never been pending.
    - Follow-ups listed for other PRs or branches are pending work too. They stay, with the facts they need, until done or moved somewhere else.
-   - Delete `alignment.md` only when nothing pending remains, follow-ups included, and say so.
+   - When the shipping decision is the only pending work left, the build is done:
+     - with a PR, keep `alignment.md` for `/pr-draft`, the next step to pick
+     - with no PR, delete `alignment.md` and say so
 8. Summarize:
    - the step done, with file locations
    - what remains in `alignment.md`, and what you would pick next

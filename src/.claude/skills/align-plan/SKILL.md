@@ -27,7 +27,10 @@ When the root does not exist, create the folder and nothing more: whatever the r
 An ordinary `alignment.md`: title, facts and decisions, with no mention of the plan.
 Written next to the plan, updated after every exchange, and moved to the step's repo root at wrap-up.
 
-The step's decisions seed it as settled. A plan fact goes where it is still needed:
+The step's decisions seed it as settled.
+Its last decision is how the step ships, as in `/align`: seeded from the plan when it says how, asked in the interview otherwise.
+
+A plan fact goes where it is still needed:
 
 - to `alignment.md` when the step's work needs it
 - stays in the plan when a remaining step needs it
