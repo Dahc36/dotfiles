@@ -18,6 +18,13 @@ The change is the commits of the current branch over `origin/<base>`:
 Uncommitted changes are ignored.
 Read every changed file in full, plus callers and callees when needed to understand the change.
 
+## The context
+
+`alignment.md` at the root of the project, when it exists, ends with the decision of how the work ships.
+The PR in it whose work the branch's commits match carries a sub-list of why the change exists, its decisions and its manual verification steps.
+That sub-list is the first source for the why and the decisions, read before the diff.
+Its lines are facts for the body, not text to paste: the body is still written in the PR's shape.
+
 ## The conventions
 
 The draft follows the repo's own conventions, found in this order; the first that exists wins:
@@ -37,7 +44,7 @@ Whatever sections the convention gives, they should carry:
 
 - Why this change exists.
   - With the minimum context to understand the change itself, nothing more.
-  - When the why is unclear, write the best inference and start it with `(INFERRED)`.
+  - When the context says nothing about the why and the change leaves it unclear, write the best inference and start it with `(INFERRED)`.
 - What changes were made, as the core decisions the rest of the changes follow from.
   - A decision is a choice the diff does not explain by itself; the diff already shows what changed in each file.
   - One flat line per decision, carrying the decision and the reason for it.
@@ -68,15 +75,19 @@ It is always in English. Identifiers and business terms that already exist in an
 
 Only after I say to open the PR:
 
-1. Push the branch when `origin/<branch>` does not exist or is behind: `git push -u origin <branch>`.
+1. Trim `alignment.md` when it holds the PR, without committing:
+   1. Remove the PR's sub-list.
+   2. Remove the shipping decision when no PR is left in it.
+   3. Remove the file when nothing else remains.
+2. Push the branch when `origin/<branch>` does not exist or is behind: `git push -u origin <branch>`.
    1. Never force push; if the push is rejected, say so and stop.
-2. Read the title from the first line of `PR.md`.
-3. Read the body from the rest, so that my edits are what gets posted.
+3. Read the title from the first line of `PR.md`.
+4. Read the body from the rest, so that my edits are what gets posted.
    1. NOTE: evidence placeholders left in it do not block; they are filled on GitHub, where attachments are uploaded.
-4. Open the PR with `gh pr create --draft --base <base> --title <title> --body-file <body>`.
+5. Open the PR with `gh pr create --draft --base <base> --title <title> --body-file <body>`.
    1. Nothing else is set: no reviewers, labels, assignees or project.
-5. Remove `PR.md`.
-6. End with the PR URL.
+6. Remove `PR.md`.
+7. End with the PR URL.
 
 ## Process
 
@@ -87,7 +98,7 @@ Only after I say to open the PR:
    - `git log origin/<base>..HEAD` prints nothing
    - `gh pr view` finds an open PR for the branch
    - a `PR.md` exists at the root of the project, tracked or not
-2. Read the change and the sources of its why.
+2. Read the context, then the change and the other sources of its why.
 3. Find the conventions.
 4. Write `PR.md`, following only the conventions.
 5. Read every file printed by `aiprinciples prose` and apply them to `PR.md`.
@@ -95,6 +106,6 @@ Only after I say to open the PR:
 7. Offer to open the draft PR, and wait.
    1. I may have made changes directly to PR.md, open the draft with those included.
    2. Do not add an attribution line or co-creators.
-8. If there's an alignment.md at the root of the project, related to this PR:
-   1. Offer to trim it, with no mention of the PR as that is now done.
-9. With the PR open, offer to run /review on the open PR
+8. With the PR open and `alignment.md` trimmed, offer to commit the trim with a short headline that fits the repo's convention.
+   1. Accepting also pushes, never with force.
+9. Offer to run /review on the open PR
