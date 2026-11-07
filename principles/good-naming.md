@@ -18,7 +18,8 @@ Repeating the type in the name adds nothing either; name and type each carry the
 
 Brevity is fine when the scope supplies the context, and wrong when it doesn't.
 A module, a directory or a type already says part of what the names inside it mean.
-Flat listings supply none: each name is read against its siblings, and carries its own context.
+Flat listings supply none: each name carries its own context.
+A context shared by too many names is a boundary the listing does not draw.
 
 ## The established term wins
 
