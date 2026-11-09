@@ -15,7 +15,7 @@ When no decision says how the work ships, it ships with no PR.
 - `alignment.md` is always the one at the root of the opened project. If there is none, say so and stop.
 - Work on exactly one commit: a coherent, reviewable change that stands on its own, with the code passing checks afterwards. Prefer foundations other steps depend on, then the smallest step that closes a whole item. Leave the rest for the next call.
 - The working tree must be clean. Uncommitted changes, staged or unstaged, are unexpected: say so and stop without touching them.
-- Do not commit and do not stage. Committing is mine.
+- Commit, then `git reset HEAD~1`. Whether the commit stands is mine.
 
 ## Process
 
@@ -37,7 +37,8 @@ When no decision says how the work ships, it ships with no PR.
    - When the shipping decision is the only pending work left, the build is done:
      - with a PR, keep `alignment.md` for `/pr-draft`, the next step to pick
      - with no PR, delete `alignment.md` and say so
-8. Summarize:
+8. Commit with a short headline that fits the repo's convention, then `git reset HEAD~1`. If the commit fails, say so and stop.
+9. Summarize:
    - the step done, with file locations
    - what remains in `alignment.md`, and what you would pick next
-   - offer to commit the changes with a message of just a short headline, that fits the repo's convention
+   - the headline, and `git reset ORIG_HEAD` to bring the commit back
