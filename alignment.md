@@ -10,7 +10,10 @@ The aim is every commit ready from one run, reviewed afterwards.
   - `/pr-draft` takes a PR's why, decisions and manual steps from the shipping decision's sub-list.
   - `/pr-draft` pushes and opens nothing without my go-ahead.
 - `/align-build` erases done work from `alignment.md`, so that file never holds history.
-- `aiprinciples <tag>` selects by the `tags:` line of each principle, so a new tag needs no script change.
+- The decision principles are the files printed by `aiprinciples decision`.
+- `/decide` makes one choice from the decision principles, and records nothing.
+  - It is given the question and what was found.
+  - It returns the choice, its reason, and whether the principles settled it or left it open.
 - `/pr-draft` takes the base branch as its argument, and stops when that base is not on origin.
 - `/pr-draft` cannot be invoked by another skill: it sets `disable-model-invocation`.
 - Git 2.50 is installed; `git rebase --update-refs` moves stacked branch pointers along during a rebase.
@@ -19,17 +22,14 @@ The aim is every commit ready from one run, reviewed afterwards.
   - `specbranch <spec path>` prints the prefix, the spec's file name without its extension
   - `specbranch <spec path> <last part>` prints the branch name, and refuses one git would not accept
   - `specbranch --list <spec path>` lists the run's existing branches
-- `aiprinciples decision` exits with an error while no principle carries the tag.
 
 ## Decisions
 
-1. The work is these skills and a tag:
+1. The work is these skills:
    - `/spec` writes the tech spec from `alignment.md`
    - `/spec-build` builds the whole spec and never stops
-   - `/decide` makes one choice from the decision principles
    - `/decide-fix` corrects one wrong decision, then improves the principles
    - `/spec-propagate` carries a correction forward through the commits and branches after it
-   - `decision` is the tag of the decision principles
    - `/align`, `/align-build`, `/align-plan` and `/pr-draft` stay as they are.
 2. The spec replaces `alignment.md`.
    - `/spec` removes `alignment.md` once the spec has resolved everything in it.
@@ -92,11 +92,8 @@ The aim is every commit ready from one run, reviewed afterwards.
     4. Invoke `/refactor` on the uncommitted diff, the full pass every time, then run the checks again.
     5. Commit, with the spec's edits and changelog entries for that commit. The commit stands.
     6. Repeat until every step's checks pass.
-18. `/decide` is a skill of its own, and it only decides.
-    - It is to the decision principles what `/refactor` is to the code principles: it reads every one fresh and applies them with judgment.
-    - It is given the question and what was found, and returns the choice and its reason.
-    - `/spec-build` calls it wherever in the loop a surprise appears, and for where to cut a PR.
-    - Recording the choice is the caller's work.
+18. `/spec-build` calls `/decide` wherever in the loop a surprise appears, and for where to cut a PR.
+    - Recording the choice is `/spec-build`'s work.
 19. A wrong decision is corrected at its commit, inside my interactive rebase.
     - I stop the rebase at the commit with `edit` and run `/decide-fix` there.
     - `/decide-fix` corrects that one decision in place and proposes the change to the principles, nothing more.
@@ -153,14 +150,9 @@ The aim is every commit ready from one run, reviewed afterwards.
 25. A branch is `<prefix>/<what the PR delivers>`, and `/spec` and `/spec-build` get every name from `specbranch`.
     - `/spec-build` names a branch after what its PR delivers.
     - `/spec` names the first branch after the first step of `Plan`.
-26. Three decision principles exist from the start, each a file in `principles/` tagged `decision`:
-    - the choice that is cheap to undo wins
-    - the spec's intent outranks its letter
-    - a PR is cut where a reviewer can judge it alone
-    - Every other one arrives through `/decide-fix`.
-27. Only `/decide` can be invoked by another skill; I start every other new skill myself.
+26. I start every new skill myself.
     - `/spec`, `/spec-build`, `/decide-fix` and `/spec-propagate` set `disable-model-invocation`.
-28. The work ships with no PR.
+27. The work ships with no PR.
 
 ## Problems for later
 
