@@ -15,20 +15,21 @@ The aim is every commit ready from one run, reviewed afterwards.
 - `/pr-draft` cannot be invoked by another skill: it sets `disable-model-invocation`.
 - Git 2.50 is installed; `git rebase --update-refs` moves stacked branch pointers along during a rebase.
   - `rebase.updateRefs` is not set in my config.
-- `src/bin/` holds `aiprinciples` and `fzpath`, linked into `~/bin`; `tests/aiprinciples/` has one bash file per case.
-- Git cannot hold a branch `x` and a branch `x/y` at once.
+- `specbranch` names a run's branches from the spec's path:
+  - `specbranch <spec path>` prints the prefix, the spec's file name without its extension
+  - `specbranch <spec path> <last part>` prints the branch name, and refuses one git would not accept
+  - `specbranch --list <spec path>` lists the run's existing branches
 - `aiprinciples decision` exits with an error while no principle carries the tag.
 
 ## Decisions
 
-1. The work is these skills, a tag and a script:
+1. The work is these skills and a tag:
    - `/spec` writes the tech spec from `alignment.md`
    - `/spec-build` builds the whole spec and never stops
    - `/decide` makes one choice from the decision principles
    - `/decide-fix` corrects one wrong decision, then improves the principles
    - `/spec-propagate` carries a correction forward through the commits and branches after it
    - `decision` is the tag of the decision principles
-   - `specbranch` is the script that names a run's branches
    - `/align`, `/align-build`, `/align-plan` and `/pr-draft` stay as they are.
 2. The spec replaces `alignment.md`.
    - `/spec` removes `alignment.md` once the spec has resolved everything in it.
@@ -149,12 +150,7 @@ The aim is every commit ready from one run, reviewed afterwards.
     4. It creates the first prefixed branch from the commit I stand on.
     5. It offers one commit that adds the spec and removes `alignment.md`, with a headline that follows the repo's conventions.
     - Nothing is pushed.
-25. A branch is `<spec name>/<what the PR delivers>`, and `specbranch` owns everything but the last part.
-    - The spec name is the spec's file name without its extension.
-    - `specbranch` lives in `src/bin/`, with tests as `aiprinciples` has, and is used by `/spec` and `/spec-build`:
-      - given a spec path, it prints the prefix
-      - given a spec path and a last part, it prints the branch name, refusing one git would not accept
-      - given a spec path and a flag, it lists the run's existing branches
+25. A branch is `<prefix>/<what the PR delivers>`, and `/spec` and `/spec-build` get every name from `specbranch`.
     - `/spec-build` names a branch after what its PR delivers.
     - `/spec` names the first branch after the first step of `Plan`.
 26. Three decision principles exist from the start, each a file in `principles/` tagged `decision`:

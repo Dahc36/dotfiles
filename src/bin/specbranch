@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  echo "usage: specbranch <spec path> [<last part>]" >&2
+  echo "       specbranch --list <spec path>" >&2
+  exit 1
+}
+
+prefix_of() {
+  local spec_path="$1"
+  local file_name=${spec_path##*/}
+  echo "${file_name%.*}"
+}
+
+refuse_malformed() {
+  local branch="$1"
+  git check-ref-format --branch "$branch" > /dev/null 2>&1 || {
+    echo "git does not accept the branch name '$branch'" >&2
+    exit 1
+  }
+}
+
+refuse_nested_with_existing_branch() {
+  local branch="$1"
+
+  local ancestor="$branch"
+  while [[ "$ancestor" == */* ]]; do
+    ancestor=${ancestor%/*}
+    if git show-ref --verify --quiet "refs/heads/$ancestor"; then
+      echo "'$branch' cannot exist while the branch '$ancestor' does" >&2
+      exit 1
+    fi
+  done
+
+  local descendant
+  descendant=$(git for-each-ref --count=1 --format='%(refname:short)' "refs/heads/$branch/")
+  if [[ -n "$descendant" ]]; then
+    echo "'$branch' cannot exist while the branch '$descendant' does" >&2
+    exit 1
+  fi
+}
+
+if [[ "${1:-}" == --list ]]; then
+  (( $# == 2 )) || usage
+  prefix=$(prefix_of "$2")
+  git for-each-ref --format='%(refname:short)' "refs/heads/$prefix/"
+  exit 0
+fi
+
+case $# in
+  1)
+    prefix_of "$1"
+    ;;
+  2)
+    branch="$(prefix_of "$1")/$2"
+    refuse_malformed "$branch"
+    refuse_nested_with_existing_branch "$branch"
+    echo "$branch"
+    ;;
+  *)
+    usage
+    ;;
+esac

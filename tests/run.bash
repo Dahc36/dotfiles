@@ -10,6 +10,7 @@ test_suites=(
   "pull"
   "remove"
   "restore"
+  "specbranch"
 )
 
 failed_tests=()
