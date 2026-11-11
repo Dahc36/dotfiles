@@ -22,30 +22,16 @@ The aim is every commit ready from one run, reviewed afterwards.
   - A rerun builds whatever the spec asks for and the branches lack.
   - It refuses to start while a rebase is in progress.
 - `specbranch --list <spec path>` lists the branches of a spec's run.
+- `/decide-fix` corrects one wrong decision wherever it lives, and knows nothing about specs or rebases.
+  - For a built spec I run it at the decision's commit, where I stopped my interactive rebase with `edit`.
+  - It leaves the correction uncommitted; amending the commit is mine.
+  - It touches no later commit and no other branch.
 
 ## Decisions
 
-1. The work is these skills:
-   - `/decide-fix` corrects one wrong decision, then improves the principles
-   - `/spec-propagate` carries a correction forward through the commits and branches after it
+1. The work is `/spec-propagate`, which carries a correction forward through the commits and branches after it.
    - `/align`, `/align-build`, `/align-plan` and `/pr-draft` stay as they are.
-2. A wrong decision is corrected at its commit, inside my interactive rebase.
-   - I stop the rebase at the commit with `edit` and run `/decide-fix` there.
-   - `/decide-fix` corrects that one decision in place and proposes the change to the principles, nothing more.
-   - It follows the process of `/refactor-fix`:
-     1. Pin down the decision: a changelog entry, or my description of a choice made silently in this commit.
-     2. Restate the decision and what is wrong with it in one line, and wait for my confirmation.
-     3. Correct the code, the spec's body and the changelog entry, touching only that decision and what it forces.
-        - The entry keeps its finding, and its reason is rewritten for the new choice.
-        - A silent decision gets the entry `/spec-build` should have written.
-     4. Run the checks the change can affect.
-     5. Iterate with me until I am happy.
-     6. Leave the changes uncommitted; amending the commit is mine.
-     7. Find what let the decision happen, and propose the exact change:
-        - to the decision principles, when they lacked it or were too abstract
-        - to `/spec-build`'s rule for what counts as a surprise, when the principles were fine and `/spec-build` missed one
-     8. Offer to commit that change on its own.
-3. `/spec-propagate` settles what survives a correction, right after `/decide-fix` and while the rebase is still stopped.
+2. `/spec-propagate` settles what survives a correction, right after `/decide-fix` and while the rebase is still stopped.
    1. It reads the correction: the uncommitted diff, or how the amended commit differs from what it was.
    2. It judges each later commit of the rebase, and each other branch that contains the old commit:
       - keep: it neither touches what the correction changed nor relies on the old decision
@@ -56,13 +42,8 @@ The aim is every commit ready from one run, reviewed afterwards.
       - nothing was dropped, and no build is needed
       - or what was dropped, and that `/spec-build` is next once the rebase is finished
    - It refuses to start when no rebase is in progress.
-4. Principles change only through `/decide-fix`, during the spec as well as during the review.
-   - Its target is a decision in a spec, built or not.
-   - During the spec I point it at a choice I reject, or at a question the principles should have answered.
-   - With no code yet, its code and checks steps have nothing to do.
-5. I start every new skill myself.
-   - `/decide-fix` and `/spec-propagate` set `disable-model-invocation`.
-6. The work ships with no PR.
+3. I start it myself: it sets `disable-model-invocation`.
+4. The work ships with no PR.
 
 ## Problems for later
 
