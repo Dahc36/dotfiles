@@ -47,10 +47,11 @@ Whatever sections the convention gives, they should carry:
   - When the context says nothing about the why and the change leaves it unclear, write the best inference and start it with `(INFERRED)`.
 - What changes were made, as the core decisions the rest of the changes follow from.
   - A decision is a choice the diff does not explain by itself; the diff already shows what changed in each file.
-  - One flat line per decision, carrying the decision and the reason for it.
-  - The same decision applied in several files is one line; a file is named only when the decision concerns it alone.
+  - One line per decision, carrying the decision only (reasons should be explained in the "why" section).
+  - Sub decisions or any color added to a decision should be a sub-iem of the main decision.
+  - The same decision applied in several files is one line; specific files should not be named in general.
   - In whatever order explains them best, which is seldom diff order.
-- When tests cover changes, a mention of that fact is enough, no need to enumerate each automated test.
+- When tests or any automation cover changes, just state that: "Covered by CI"
 - How the change is verified.
   - If any manual check is needed, or a smoke test or a whole flow, it should be detailed as numbered steps.
   - A step names the place to go and the control to act on: the story, screen or command, then the button or field.
